@@ -1,0 +1,70 @@
+# Epic 2 breakdown: features in this order (hooks first, they shape the wiring).
+
+[[entry]]
+id = 1
+title = "Menu hooks: extensions can add entries to Majoor's context menus"
+type = "story"
+after = []
+verify = "A tiny example extension adds one item to the grid context menu without touching Majoor's source; documented in the PR."
+description = """
+Majoor has no extension surface: everything is internal. Add a small hook API (a registry
+the grid/context menus consult) so another extension can register menu entries — the way
+our ComfyUI-Rating had to inject 'Rate image' by DOM watching (fragile across Majoor
+updates). Keep it minimal: registered items get the menu context (target asset(s), grid
+state) and Majoor renders them like its own.
+"""
+
+[[entry]]
+id = 2
+title = "Multi-card delete uses the bulk endpoint"
+type = "bug"
+severity = "P2"
+after = []
+verify = "Deleting a 100-card selection issues one bulk request (or batched bulk requests), all 100 gone, no rate-limit failures."
+description = """
+GridContextMenu's 'Delete N files' loops the single-delete endpoint per card and dies at
+the per-minute cap. The bulk endpoint (assets/delete) already exists and is used only by
+duplicates cleanup. Wire multi-card delete through it, with the same confirm dialog.
+Reference: ysalune deployed workaround was raising the cap (patch 10) — the endpoint swap
+is the real fix.
+"""
+
+[[entry]]
+id = 3
+title = "Bulk tagging: one editor for the whole selection"
+type = "story"
+after = [1]
+verify = "Select 100 cards, add and remove a tag across all in one action; each keeps its other tags; progress visible for large sets."
+description = """
+Majoor can only edit one asset's tags at a time (right-click 'Edit tags' and T both act on
+one card; no multi-asset route exists). Add a bulk path: a tags editor on the selection
+that adds/removes tags across every card, merging with each asset's existing tags, with
+batched writes respecting the write cap (and its knob from epic 1). Reference behavior:
+ysalune's bulk rating merges and never clobbers unrelated tags.
+"""
+
+[[entry]]
+id = 4
+title = "Bulk star rating across the selection (number keys and menu)"
+type = "story"
+after = [3]
+verify = "Select 200 cards, press 4: all 200 rated, none dropped at the cap, cards update live."
+description = """
+The rating hotkeys path already walks the selection but in chunks that die at the 30/min
+asset-write cap, and the right-click 'Set rating' submenu only rates the clicked card.
+Make the hotkey path batch-resilient and give the submenu a 'whole selection' mode.
+"""
+
+[[entry]]
+id = 5
+title = "Empty trash action"
+type = "story"
+after = [2]
+verify = "'Empty trash' in the appropriate menu removes all trashed files on demand, with a confirm; the trash view reflects it at once."
+description = """
+Deleted files go to .Trash-* and never leave on their own; our homelab runs an external
+cron. Upstream deserves a first-class action: an 'Empty trash' menu item with a count and
+confirm, wired to a route that clears the trash the same way delete fills it. Reference:
+ysalune's trash-expiry tool (deploy/comfyui-nodes/tools/comfyui-trash-expire.sh) for the
+filesystem semantics (trashinfo + files, names with spaces).
+"""

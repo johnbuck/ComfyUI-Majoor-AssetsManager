@@ -1,0 +1,3 @@
+[core]
+project_name = "ComfyUI-Majoor-AssetsManager"
+output_folder = "{project-root}/backlog"  # repo rule: specs live in backlog/ (AGENTS.md)

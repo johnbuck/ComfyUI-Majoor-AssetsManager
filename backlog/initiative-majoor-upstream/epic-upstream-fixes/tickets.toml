@@ -1,0 +1,44 @@
+# Epic 1 breakdown: one branch per PR, in this order.
+
+[[entry]]
+id = 1
+title = "Recursive scan indexes hidden folders (.Trash-0) as live images"
+type = "bug"
+severity = "P1"
+after = []
+verify = "On a build with a .Trash-* folder inside output, a recursive rescan adds none of its files; the unit test in the PR fails on current main."
+description = """
+The folder watcher skips hidden folders but the recursive scan does not: a scan of output
+walks .Trash-* and indexes trashed images as live assets (720 on our lane). Port ysalune's
+hidden-folder + internal-folder skip for the scan path (fs_walker), re-verify the bug on
+current main first, add the test. Source: ysalune patch in VENDOR.md commit 207374c3.
+"""
+
+[[entry]]
+id = 2
+title = "ExifTool tag writes pile up duplicate XMP:Subject entries"
+type = "bug"
+severity = "P2"
+after = []
+verify = "Saving tags repeatedly (rating then tags, several rounds) leaves exactly the latest set in the PNG's XMP; the bundled tests added in the PR fail on current main."
+description = """
+Three separate causes made every rating/tag save append duplicate Subject entries: the
+argument construction, missing -sep/-overwrite semantics, and the ordering of repeated
+writes. We fixed all three in the vendored tree with tests (ysalune commits around
+7a3f804, review triage in the Majoor trial As built). Port as one fix with tests; adapt to
+current main's rating_tags_service.
+"""
+
+[[entry]]
+id = 3
+title = "Rate limits configurable: delete and asset-write (tags/ratings) caps as env knobs"
+type = "story"
+after = [1]
+verify = "With the env knobs unset the caps stay at current defaults; set high, a bulk operation of hundreds completes without rate-limit toasts; documented in the PR."
+description = """
+Single deletes and asset writes (star ratings, tag saves) are hard-capped at 20 and 30 per
+minute, so Majoor's own multi-card operations fail partway (delete N files loops one-by-one
+and dies after 20). Make both caps env-configurable (MJR_AM_DELETE_RATE_LIMIT,
+MJR_AM_ASSET_WRITE_RATE_LIMIT) with sane clamps, defaults unchanged. Source: ysalune
+patches 10 and 12 (VENDOR.md), each proved in production.
+"""
