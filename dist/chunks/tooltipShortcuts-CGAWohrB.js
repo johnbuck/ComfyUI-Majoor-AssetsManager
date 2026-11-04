@@ -1,14 +1,8 @@
-<<<<<<<< HEAD:dist/chunks/openMajoorSettings-KUN7tTk1.js
-import { A as e, E as t, J as n, R as r, S as i, Y as a, b as o, j as s, m as c } from "./events-tsQFsZrH.js";
-import { a as l, n as u } from "./graphTraversal-DTdQWkn5.js";
-import { S as d, Y as f, b as p, x as m, y as h } from "./SidebarWorkflowSection--9R_qsje.js";
-========
 import { Vn as e, bn as t, fn as n, gn as r, in as i, kn as a, un as o, xn as s } from "./config-C9a-wT5M.js";
 import { a as c, n as l } from "./graphTraversal-DTdQWkn5.js";
 import { C as u, S as d, b as f, x as p, y as m } from "./generationSectionState-DuXxSw-j.js";
-import { _ as ee, a as te, c as ne, d as re, f as ie, g as ae, h as oe, i as se, l as ce, m as le, n as ue, o as de, p as fe, r as pe, s as me, t as he, u as ge } from "./mjr-primevue-C07IsEdU.js";
-import { t as _e } from "./mjr-vue-vendor-CEDOnn2t.js";
->>>>>>>> upstream/main:dist/chunks/tooltipShortcuts-Ury2eTek.js
+import { _ as ee, a as te, c as ne, d as re, f as ie, g as ae, h as oe, i as se, l as ce, m as le, n as ue, o as de, p as fe, r as pe, s as me, t as he, u as ge } from "./mjr-primevue-QrNPJaqR.js";
+import { t as _e } from "./mjr-vue-vendor-Dn5oe7QV.js";
 // ui/features/viewer/floatingViewerProgress.ts
 var h = "progress-update", g = "__MJR_MFV_PROGRESS_SERVICE__";
 function ve() {

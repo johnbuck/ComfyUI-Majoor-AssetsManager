@@ -1,21 +1,10 @@
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-import { $t as e, g as t, y as n } from "./viewerRuntimeHosts-Ctr8wab-.js";
-import { B as r, C as i, I as a, M as o, O as s, P as c, R as l, V as u, j as d, m as f, o as p, r as m, rt as h, v as g, w as _, x as v } from "./events-tsQFsZrH.js";
-import { a as y, i as b, o as x, s as S } from "./graphTraversal-DTdQWkn5.js";
-import { D as C, _ as w, g as T, m as E, n as D, p as ee, r as O } from "./Viewer-tyIQRJhO.js";
-import { r as k, v as A } from "./SidebarWorkflowSection--9R_qsje.js";
-import { _ as j, a as M, c as N, d as P, f as F, g as I, h as L, i as te, l as R, m as z, o as B, p as ne, r as re, s as V, t as ie, u as H, v as U } from "./openMajoorSettings-KUN7tTk1.js";
-import { a as W, n as ae, r as oe } from "./model3dRenderer-B18R8Ewh.js";
-import { i as se, o as ce, r as le, t as ue } from "./geninfoParser-CgHp-y-n.js";
-import { t as de } from "./genInfo-BZcivdLP.js";
-========
 import { En as e, Mn as t, Sn as n, Wt as r, Yn as i, cn as a, dn as o, in as s, jn as c, kn as l, mn as u, pn as d, s as f, t as p, u as m, vn as h, wn as g, xn as _ } from "./config-C9a-wT5M.js";
 import { a as v, i as y, o as b, s as x } from "./graphTraversal-DTdQWkn5.js";
 import { c as S, l as C, m as w, p as ee, s as T, t as E, u as D, v as O } from "./generationSectionState-DuXxSw-j.js";
 import { r as k } from "./events-1iwo5blr.js";
-import { C as A, D as j, E as M, T as N, _ as P, a as F, b as I, d as L, f as R, g as z, h as B, m as te, n as V, o as ne, p as H, r as re, s as ie, t as U, v as ae, w as oe, y as se } from "./tooltipShortcuts-Ury2eTek.js";
-import { I as ce } from "./mjr-primevue-C07IsEdU.js";
-import { C as le, S as ue, n as de, t as fe, w as pe } from "./genInfo-Dk8cerKp.js";
+import { C as A, D as j, E as M, T as N, _ as P, a as F, b as I, d as L, f as R, g as z, h as B, m as te, n as V, o as ne, p as H, r as re, s as ie, t as U, v as ae, w as oe, y as se } from "./tooltipShortcuts-CGAWohrB.js";
+import { I as ce } from "./mjr-primevue-QrNPJaqR.js";
+import { C as le, S as ue, n as de, t as fe, w as pe } from "./genInfo-BIxrywC3.js";
 // ui/features/viewer/videoSync.ts
 var me = () => {
 	try {
@@ -262,7 +251,6 @@ function he(e, t, { threshold: n = .15, correctionCooldownMs: r = 250 } = {}) {
 	}
 	return i;
 }
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 // ui/features/viewer/floatingViewerConstants.ts
 var W = Object.freeze({
 	SIMPLE: "simple",
@@ -473,22 +461,14 @@ function Ae(e, t = null, { kind: n = "" } = {}) {
 			console.debug?.(e);
 		}
 		k(), j();
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	}, z = (e) => F(e), B = (e) => {
-========
 	}, B = (e) => F(e), te = (e) => {
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		try {
 			if (e?.target?.closest?.("button, input, textarea, select")) return;
 			c.focus?.({ preventScroll: !0 });
 		} catch (e) {
 			console.debug?.(e);
 		}
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	}, ne = (e) => {
-========
 	}, V = (e) => {
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		let t = String(e?.key || "");
 		if (!(!t || e?.altKey || e?.ctrlKey || e?.metaKey)) {
 			if (t === " " || t === "Spacebar") e.preventDefault?.(), I(e);
@@ -502,19 +482,11 @@ function Ae(e, t = null, { kind: n = "" } = {}) {
 		}
 	};
 	try {
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-		c._mjrSimplePlayerHandleKeydown = ne;
-	} catch (e) {
-		console.debug?.(e);
-	}
-	f.addEventListener("click", I), m.addEventListener("click", (e) => L(-1, e)), g.addEventListener("click", (e) => L(1, e)), b.addEventListener("click", te), u.addEventListener("input", R), l.addEventListener("pointerdown", z), l.addEventListener("click", z), l.addEventListener("dblclick", z), c.addEventListener("pointerdown", B), c.addEventListener("keydown", ne), e instanceof HTMLMediaElement && (e.addEventListener("play", () => {
-========
 		c._mjrSimplePlayerHandleKeydown = V;
 	} catch (e) {
 		console.debug?.(e);
 	}
 	f.addEventListener("click", I), m.addEventListener("click", (e) => L(-1, e)), g.addEventListener("click", (e) => L(1, e)), b.addEventListener("click", R), u.addEventListener("input", z), l.addEventListener("pointerdown", B), l.addEventListener("click", B), l.addEventListener("dblclick", B), c.addEventListener("pointerdown", te), c.addEventListener("keydown", V), e instanceof HTMLMediaElement && (e.addEventListener("play", () => {
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		D(), P();
 	}, { passive: !0 }), e.addEventListener("pause", () => {
 		M(), D(), k(), j();
@@ -714,36 +686,6 @@ function He(e, { initialMuted: t = !1, initialPlaybackRate: n = 1, fill: r = !1 
 	if (i !== "video" && i !== "audio") return null;
 	let a = Fe(e);
 	if (!a) return null;
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let o = K(e), s = `mjr-mfv-media mjr-mfv-media--fit-height${t ? " mjr-mfv-media--fill" : ""}`, c = ke(e?.filename || "") === ".webp" && Number(e?.duration ?? e?.metadata_raw?.duration ?? 0) > 0, l = (r, a) => {
-		if (!n) return r;
-		let o = document.createElement("div");
-		if (o.className = `mjr-mfv-player-host${t ? " mjr-mfv-player-host--fill" : ""}`, a === "audio") {
-			o.classList.add("mjr-mfv-player-host--audio");
-			let t = document.createElement("div");
-			t.className = "mjr-mfv-player-audio-backdrop", t.textContent = String(e?.filename || "Audio"), o.appendChild(t);
-		}
-		o.appendChild(r);
-		try {
-			o.tabIndex = -1, o.addEventListener("pointerdown", (e) => {
-				try {
-					if (e?.target?.closest?.("button, input, textarea, select, a, [contenteditable='true']")) return;
-					o.focus?.({ preventScroll: !0 });
-				} catch (e) {
-					console.debug?.(e);
-				}
-			});
-		} catch (e) {
-			console.debug?.(e);
-		}
-		let s = O(r, {
-			variant: "viewer",
-			hostEl: o,
-			mediaKind: a,
-			initialFps: ee(e) || void 0,
-			initialFrameCount: E(e, ee(e)) || void 0,
-			initialPlaybackRate: i
-========
 	try {
 		let o = ee(e);
 		return je({
@@ -757,7 +699,6 @@ function He(e, { initialMuted: t = !1, initialPlaybackRate: n = 1, fill: r = !1 
 			compact: !0,
 			fill: r,
 			mediaClass: "mjr-mfv-media"
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		});
 	} catch (e) {
 		return console.debug?.(e), null;
@@ -1210,19 +1151,11 @@ function ft() {
 // ui/features/viewer/workflowGraphMap/workflowGraphMapActions.ts
 async function pt(e) {
 	if (!e) return !1;
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let t = JSON.stringify(ht(e), null, 2);
-	return C(t);
-}
-async function ct(e) {
-	return C(lt(e));
-========
 	let t = JSON.stringify(xt(e), null, 2);
 	return I(t);
 }
 async function mt(e) {
 	return I(ht(e));
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 }
 function ht(e) {
 	if (e == null) return "";
@@ -1367,11 +1300,7 @@ var Dt = 64, Ot = class {
 		return this._el;
 	}
 	setAsset(e) {
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-		this._asset !== e && (this._asset = e || null, this._workflow = ne(this._asset), this._selectedNodeId = "", this._view = {
-========
 		this._asset !== e && (this._asset = e || null, this._workflow = se(this._asset), this._selectedNodeId = "", this._view = {
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 			zoom: 1,
 			centerX: null,
 			centerY: null
@@ -1435,11 +1364,7 @@ var Dt = 64, Ot = class {
 			return;
 		}
 		this._status.textContent = this._large ? this._selectedNodeId ? `${t} nodes (${this._subgraphDisplayMode}) - selected #${this._selectedNodeId}` : `${t} nodes (${this._subgraphDisplayMode}) - select a node` : `${t} nodes - graph opened in viewer`;
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-		let n = B(this._workflow, this._selectedNodeId, { includeSubgraphs: e });
-========
 		let n = R(this._workflow, this._selectedNodeId, { includeSubgraphs: e });
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		if (!n) {
 			let e = document.createElement("div");
 			e.className = "mjr-ws-sidebar-empty", e.textContent = this._large ? "Click a node in the graph map" : "Use the large Graph Map in the viewer to select nodes", kt(this._details, e);
@@ -2158,11 +2083,7 @@ function dn(e) {
 	let i = document.createElement("span");
 	i.textContent = "Majoor Floating Viewer", n.append(r, i);
 	let a = document.createElement("button");
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	e._closeBtn = a, a.type = "button", a.className = "mjr-icon-btn mjr-mfv-close-btn", w(a, f("tooltip.closeViewer", "Close viewer"), "Esc");
-========
 	e._closeBtn = a, a.type = "button", a.className = "mjr-icon-btn mjr-mfv-close-btn", V(a, s("tooltip.closeViewer", "Close viewer"), "Esc");
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 	let o = document.createElement("i");
 	return o.className = "pi pi-times", o.setAttribute("aria-hidden", "true"), a.appendChild(o), t.appendChild(n), t.appendChild(a), t;
 }
@@ -2302,15 +2223,9 @@ function fn(e) {
 	S.className = "mjr-mfv-ch-popover", e.element.appendChild(S);
 	let C = document.createElement("div");
 	C.className = "mjr-menu", C.style.cssText = "display:grid;gap:4px;", S.appendChild(C);
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let T = document.createElement("select");
-	T.style.cssText = "position:absolute;opacity:0;pointer-events:none;width:0;height:0;overflow:hidden;", S.appendChild(T);
-	let E = [
-========
 	let w = document.createElement("select");
 	w.style.cssText = "position:absolute;opacity:0;pointer-events:none;width:0;height:0;overflow:hidden;", S.appendChild(w);
 	let ee = [
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		{
 			value: "rgb",
 			color: "#e0e0e0",
@@ -2347,13 +2262,8 @@ function fn(e) {
 			weight: "400",
 			label: "L"
 		}
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	], D = [];
-	for (let e of E) {
-========
 	], T = [];
 	for (let e of ee) {
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		let t = document.createElement("option");
 		t.value = e.value, w.appendChild(t);
 		let n = document.createElement("button");
@@ -2363,37 +2273,22 @@ function fn(e) {
 		let i = document.createElement("span");
 		i.textContent = e.label, i.style.color = e.color, i.style.fontWeight = e.weight, r.appendChild(i);
 		let a = document.createElement("i");
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-		a.className = "pi pi-check mjr-menu-item-check", a.style.opacity = e.value === v ? "1" : "0", n.appendChild(r), n.appendChild(a), C.appendChild(n), D.push(n), e.value === v && n.classList.add("is-active");
-	}
-	T.value = v, x(v), y.classList.toggle("is-on", v !== "rgb"), e._channelSelect = T, e._chBtn = y, e._chPopover = S;
-	let ee = () => {
-========
 		a.className = "pi pi-check mjr-menu-item-check", a.style.opacity = e.value === v ? "1" : "0", n.appendChild(r), n.appendChild(a), C.appendChild(n), T.push(n), e.value === v && n.classList.add("is-active");
 	}
 	w.value = v, x(v), y.classList.toggle("is-on", v !== "rgb"), e._channelSelect = w, e._chBtn = y, e._chPopover = S;
 	let E = () => {
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		let t = y.getBoundingClientRect(), n = e.element.getBoundingClientRect();
 		S.style.left = `${t.left - n.left}px`, S.style.top = `${t.bottom - n.top + 4}px`, S.classList.add("is-open"), y.setAttribute("aria-expanded", "true");
 	};
 	e._closeChPopover = () => {
 		S.classList.remove("is-open"), y.setAttribute("aria-expanded", "false");
 	}, y.addEventListener("click", (t) => {
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-		t.stopPropagation(), S.classList.contains("is-open") ? e._closeChPopover() : (e._closeAllToolbarPopovers?.(), ee());
-========
 		t.stopPropagation(), S.classList.contains("is-open") ? e._closeChPopover() : (e._closeAllToolbarPopovers?.(), E());
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 	}), C.addEventListener("click", (t) => {
 		let n = t.target.closest(".mjr-menu-item");
 		if (!n) return;
 		let r = n.dataset.value;
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-		T.value = r ?? "", T.dispatchEvent(new Event("change", { bubbles: !0 })), D.forEach((e) => {
-========
 		w.value = r ?? "", w.dispatchEvent(new Event("change", { bubbles: !0 })), T.forEach((e) => {
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 			let t = e.dataset.value === r;
 			e.classList.toggle("is-active", t), e.querySelector(".mjr-menu-item-check").style.opacity = t ? "1" : "0";
 		}), x(r), y.classList.toggle("is-on", r !== "rgb"), e._closeChPopover();
@@ -2480,32 +2375,14 @@ function fn(e) {
 			e.classList.toggle("is-active", t), e.querySelector(".mjr-menu-item-check").style.opacity = t ? "1" : "0";
 		}), e._closeFormatPopover();
 	});
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let te = document.createElement("div");
-	te.className = "mjr-mfv-toolbar-sep", te.setAttribute("aria-hidden", "true"), n.appendChild(te), e._liveBtn = document.createElement("button"), e._liveBtn.type = "button", e._liveBtn.className = "mjr-icon-btn", e._liveBtn.innerHTML = "<i class=\"pi pi-circle\" aria-hidden=\"true\"></i>", e._liveBtn.setAttribute("aria-pressed", "false"), w(e._liveBtn, f("tooltip.liveStreamOff", "Live Stream: OFF - click to follow final generation outputs"), "L"), n.appendChild(e._liveBtn), e._previewBtn = document.createElement("button"), e._previewBtn.type = "button", e._previewBtn.className = "mjr-icon-btn", e._previewBtn.innerHTML = "<i class=\"pi pi-eye\" aria-hidden=\"true\"></i>", e._previewBtn.setAttribute("aria-pressed", "false"), w(e._previewBtn, f("tooltip.previewStreamOff", "KSampler Preview: OFF - click to stream sampler denoising frames"), "K"), n.appendChild(e._previewBtn), e._nodeStreamBtn = document.createElement("button"), e._nodeStreamBtn.type = "button", e._nodeStreamBtn.className = "mjr-icon-btn", e._nodeStreamBtn.innerHTML = "<i class=\"pi pi-sitemap\" aria-hidden=\"true\"></i>", e._nodeStreamBtn.setAttribute("aria-pressed", "false"), w(e._nodeStreamBtn, f("tooltip.nodeStreamOff", "Node Stream: OFF - click to follow selected node previews, including ImageOps live canvases"), "N"), n.appendChild(e._nodeStreamBtn), e._genBtn = document.createElement("button"), e._genBtn.type = "button", e._genBtn.className = "mjr-icon-btn", e._genBtn.setAttribute("aria-pressed", String(!!e._genSidebarEnabled));
-========
 	let L = document.createElement("div");
 	L.className = "mjr-mfv-toolbar-sep", L.setAttribute("aria-hidden", "true"), n.appendChild(L), e._liveBtn = document.createElement("button"), e._liveBtn.type = "button", e._liveBtn.className = "mjr-icon-btn", e._liveBtn.innerHTML = "<i class=\"pi pi-circle\" aria-hidden=\"true\"></i>", e._liveBtn.setAttribute("aria-pressed", "false"), V(e._liveBtn, s("tooltip.liveStreamOff", "Live Stream: OFF - click to follow final generation outputs"), "L"), n.appendChild(e._liveBtn), e._previewBtn = document.createElement("button"), e._previewBtn.type = "button", e._previewBtn.className = "mjr-icon-btn", e._previewBtn.innerHTML = "<i class=\"pi pi-eye\" aria-hidden=\"true\"></i>", e._previewBtn.setAttribute("aria-pressed", "false"), V(e._previewBtn, s("tooltip.previewStreamOff", "KSampler Preview: OFF - click to stream sampler denoising frames"), "K"), n.appendChild(e._previewBtn), e._nodeStreamBtn = document.createElement("button"), e._nodeStreamBtn.type = "button", e._nodeStreamBtn.className = "mjr-icon-btn", e._nodeStreamBtn.innerHTML = "<i class=\"pi pi-sitemap\" aria-hidden=\"true\"></i>", e._nodeStreamBtn.setAttribute("aria-pressed", "false"), V(e._nodeStreamBtn, s("tooltip.nodeStreamOff", "Node Stream: OFF - click to follow selected node previews, including ImageOps live canvases"), "N"), n.appendChild(e._nodeStreamBtn), e._genBtn = document.createElement("button"), e._genBtn.type = "button", e._genBtn.className = "mjr-icon-btn", e._genBtn.setAttribute("aria-pressed", String(!!e._genSidebarEnabled));
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 	let R = document.createElement("i");
 	R.className = "pi pi-info-circle", R.setAttribute("aria-hidden", "true"), e._genBtn.appendChild(R), n.appendChild(e._genBtn), e._updateGenBtnUI(), e._popoutBtn = document.createElement("button"), e._popoutBtn.type = "button", e._popoutBtn.className = "mjr-icon-btn";
 	let z = s("tooltip.popOutViewer", "Pop out viewer to separate window");
 	e._popoutBtn.title = z, e._popoutBtn.setAttribute("aria-label", z), e._popoutBtn.setAttribute("aria-pressed", "false");
 	let B = document.createElement("i");
 	B.className = "pi pi-external-link", B.setAttribute("aria-hidden", "true"), e._popoutBtn.appendChild(B), n.appendChild(e._popoutBtn), e._captureBtn = document.createElement("button"), e._captureBtn.type = "button", e._captureBtn.className = "mjr-icon-btn";
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let ne = f("tooltip.captureView", "Save view as image");
-	e._captureBtn.title = ne, e._captureBtn.setAttribute("aria-label", ne);
-	let re = document.createElement("i");
-	re.className = "pi pi-download", re.setAttribute("aria-hidden", "true"), e._captureBtn.appendChild(re), n.appendChild(e._captureBtn);
-	let V = document.createElement("div");
-	V.className = "mjr-mfv-toolbar-sep", V.style.marginLeft = "auto", V.setAttribute("aria-hidden", "true"), n.appendChild(V), e._settingsBtn = document.createElement("button"), e._settingsBtn.type = "button", e._settingsBtn.className = "mjr-icon-btn mjr-mfv-settings-btn";
-	let ie = f("tooltip.nodeParams", "Node Parameters");
-	e._settingsBtn.title = ie, e._settingsBtn.setAttribute("aria-label", ie), e._settingsBtn.setAttribute("aria-pressed", "false");
-	let H = document.createElement("i");
-	H.className = "pi pi-sliders-h", H.setAttribute("aria-hidden", "true"), e._settingsBtn.appendChild(H), n.appendChild(e._settingsBtn), e._runHandle = Wt(), n.appendChild(e._runHandle.el), e._majoorSettingsBtn = document.createElement("button"), e._majoorSettingsBtn.type = "button", e._majoorSettingsBtn.className = "mjr-icon-btn mjr-mfv-majoor-settings-btn";
-	let U = f("tooltip.openMajoorSettings", "Open Majoor Assets Manager settings");
-========
 	let te = s("tooltip.captureView", "Save view as image");
 	e._captureBtn.title = te, e._captureBtn.setAttribute("aria-label", te);
 	let ne = document.createElement("i");
@@ -2517,7 +2394,6 @@ function fn(e) {
 	let ie = document.createElement("i");
 	ie.className = "pi pi-sliders-h", ie.setAttribute("aria-hidden", "true"), e._settingsBtn.appendChild(ie), n.appendChild(e._settingsBtn), e._runHandle = Xt(), n.appendChild(e._runHandle.el), e._majoorSettingsBtn = document.createElement("button"), e._majoorSettingsBtn.type = "button", e._majoorSettingsBtn.className = "mjr-icon-btn mjr-mfv-majoor-settings-btn";
 	let U = s("tooltip.openMajoorSettings", "Open Majoor Assets Manager settings");
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 	e._majoorSettingsBtn.title = U, e._majoorSettingsBtn.setAttribute("aria-label", U);
 	let ae = document.createElement("i");
 	return ae.className = "pi pi-cog", ae.setAttribute("aria-hidden", "true"), e._majoorSettingsBtn.appendChild(ae), n.appendChild(e._majoorSettingsBtn), e._handleDocClick = (t) => {
@@ -2762,23 +2638,14 @@ function On(e) {
 			icon: "pi-sitemap",
 			label: "Mode: Graph Map - click to switch"
 		}
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	}[e._mode] || {}, r = T(n, "C"), i = document.createElement("i");
-	i.className = `pi ${t}`, i.setAttribute("aria-hidden", "true"), e._modeBtn.replaceChildren(i), e._modeBtn.title = r, e._modeBtn.setAttribute("aria-label", r), e._modeBtn.removeAttribute("aria-pressed"), e._modeBtn.classList.toggle("is-on", e._mode !== G.SIMPLE), e._modeDrop?.selectItem?.(e._mode);
-========
 	}[e._mode] || {}, r = U(n, "C"), i = document.createElement("i");
 	i.className = `pi ${t}`, i.setAttribute("aria-hidden", "true"), e._modeBtn.replaceChildren(i), e._modeBtn.title = r, e._modeBtn.setAttribute("aria-label", r), e._modeBtn.removeAttribute("aria-pressed"), e._modeBtn.classList.toggle("is-on", e._mode !== W.SIMPLE), e._modeDrop?.selectItem?.(e._mode);
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 }
 function kn(e, t) {
 	if (!e._liveBtn) return;
 	let n = !!t;
 	e._liveBtn.classList.toggle("mjr-live-active", n);
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let r = n ? f("tooltip.liveStreamOn", "Live Stream: ON - follows final generation outputs after execution") : f("tooltip.liveStreamOff", "Live Stream: OFF - click to follow final generation outputs"), i = T(r, "L");
-========
 	let r = n ? s("tooltip.liveStreamOn", "Live Stream: ON - follows final generation outputs after execution") : s("tooltip.liveStreamOff", "Live Stream: OFF - click to follow final generation outputs"), i = U(r, "L");
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 	e._liveBtn.setAttribute("aria-pressed", String(n)), e._liveBtn.setAttribute("aria-label", i);
 	let a = document.createElement("i");
 	a.className = n ? "pi pi-circle-fill" : "pi pi-circle", a.setAttribute("aria-hidden", "true"), e._liveBtn.replaceChildren(a), e._liveBtn.title = i;
@@ -2786,11 +2653,7 @@ function kn(e, t) {
 function An(e, t) {
 	if (e._previewActive = !!t, !e._previewBtn) return;
 	e._previewBtn.classList.toggle("mjr-preview-active", e._previewActive);
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let n = e._previewActive ? f("tooltip.previewStreamOn", "KSampler Preview: ON - streams sampler denoising frames during execution") : f("tooltip.previewStreamOff", "KSampler Preview: OFF - click to stream sampler denoising frames"), r = T(n, "K");
-========
 	let n = e._previewActive ? s("tooltip.previewStreamOn", "KSampler Preview: ON - streams sampler denoising frames during execution") : s("tooltip.previewStreamOff", "KSampler Preview: OFF - click to stream sampler denoising frames"), r = U(n, "K");
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 	e._previewBtn.setAttribute("aria-pressed", String(e._previewActive)), e._previewBtn.setAttribute("aria-label", r);
 	let i = document.createElement("i");
 	i.className = e._previewActive ? "pi pi-eye" : "pi pi-eye-slash", i.setAttribute("aria-hidden", "true"), e._previewBtn.replaceChildren(i), e._previewBtn.title = r;
@@ -2867,11 +2730,7 @@ function Pn(e) {
 function Fn(e, t) {
 	if (e._nodeStreamActive = !!t, e._nodeStreamActive || e.setNodeStreamSelection?.(null), !e._nodeStreamBtn) return;
 	e._nodeStreamBtn.classList.toggle("mjr-nodestream-active", e._nodeStreamActive);
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-	let n = e._nodeStreamActive ? f("tooltip.nodeStreamOn", "Node Stream: ON - follows the selected node preview when frontend media exists") : f("tooltip.nodeStreamOff", "Node Stream: OFF - click to follow selected node previews, including ImageOps live canvases"), r = T(n, "N");
-========
 	let n = e._nodeStreamActive ? s("tooltip.nodeStreamOn", "Node Stream: ON - follows the selected node preview when frontend media exists") : s("tooltip.nodeStreamOff", "Node Stream: OFF - click to follow selected node previews, including ImageOps live canvases"), r = U(n, "N");
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 	e._nodeStreamBtn.setAttribute("aria-pressed", String(e._nodeStreamActive)), e._nodeStreamBtn.setAttribute("aria-label", r);
 	let i = document.createElement("i");
 	i.className = "pi pi-sitemap", i.setAttribute("aria-hidden", "true"), e._nodeStreamBtn.replaceChildren(i), e._nodeStreamBtn.title = r;
@@ -4052,11 +3911,7 @@ var _r = 0, vr = class {
 			if (e.length < 2) return;
 			let t = e[0] || null, n = e.slice(1);
 			if (!t || !n.length) return;
-<<<<<<<< HEAD:dist/chunks/FloatingViewer-qcsLGkFt.js
-			this._compareSyncAC = D(t, n, { threshold: .08 });
-========
 			this._compareSyncAC = he(t, n, { threshold: .08 });
->>>>>>>> upstream/main:dist/chunks/FloatingViewer--x61GAzy.js
 		} catch (e) {
 			console.debug?.(e);
 		}
