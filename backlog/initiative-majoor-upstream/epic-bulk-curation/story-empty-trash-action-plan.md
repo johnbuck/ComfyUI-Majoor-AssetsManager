@@ -3,13 +3,13 @@ title: 'Empty trash: permanently remove the files Majoor sent to the freedesktop
 type: 'feature'
 ticket: '5'
 created: '2026-11-04'
-status: 'in-review'
+status: 'built'
 route: 'full'
 route_source: 'pinned'
 review: 'thorough'
 review_source: 'pinned'
 lenses_ran: ['security']
-review_loop_iteration: 0
+review_loop_iteration: 3
 followup_review_recommended: false
 context: []
 baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
@@ -139,6 +139,12 @@ node/npm on the host.
 
 ## Implementation Notes
 
+- Built by GLM-5.3 sub-agent (Paseo) in worktree `feat-empty-trash`; synthetic trash trees under tmp_path only; tests first (ImportError on main).
+- Design changed twice under review (see Plan Change Log): crafted-basename guard; then ownership/mode checks, fd-relative O_NOFOLLOW removal, directory payloads skipped (no rmtree), NUL-safe per-entry handling, GET rate limit; then off-loop scan and O_NOFOLLOW info open.
+- `trash_service.py` at 100% line+branch coverage (278 stmts / 86 branches).
+- One pass reformatted ~12 unrelated i18n.ts lines; reverted (diff is additions only). The gate now warns when an edited file's Prettier drift drops.
+- Residual (accepted, not deferred): intermediate path components are not O_NOFOLLOW; the fstat ownership re-check confines any redirect to a uid-owned trash-shaped tree, removing only REG/LNK entries by bare name — verified by the second security pass.
+
 ## Plan Change Log
 
 ### 2026-11-04 — amendments from orchestrator review
@@ -154,6 +160,29 @@ node/npm on the host.
 
 ## Review Triage Log
 
+### 2026-11-04 — Review pass 1 (orchestrator)
+- verdicts: 3 findings — high 1, medium 1, low 1
+- findings:
+  - `[high]` `[bad_plan]` crafted info basenames (`.trashinfo`, `..trashinfo`, `...trashinfo`) made the payload `files/` or the trash dir → rmtree everything — stem validation + parent check; plan amended; security tests.
+  - `[medium]` `[patch]` symlinked root prefixes never matched → Majoor entries silently never cleaned — lexical+realpath root matching.
+  - `[low]` `[patch]` unbounded trashinfo read — 64 KiB cap.
+
+### 2026-11-04 — Review pass 2 (adversarial security lens)
+- verdicts: 5 findings — high 2, medium 2, low 1
+- findings:
+  - `[high]` `[bad_plan]` no ownership/mode validation → planted `.Trash-<uid>` on world-writable mounts — owner==uid and no group/world write on trash dir, files/, info/; plan amended.
+  - `[high]` `[bad_plan]` path-based removal after one-shot validation → symlink-swap arbitrary deletion — fd-relative O_NOFOLLOW removal with fstat re-checks; directory payloads skipped (rmtree removed); plan amended.
+  - `[medium]` `[patch]` NUL in Path= aborted the whole scan — rejected; per-entry (OSError, ValueError) handling.
+  - `[medium]` `[patch]` GET did unbounded recursive sizing with no rate limit — no recursion; GET 20/60 s.
+  - `[low]` `[patch]` stem sub-guards untested — tested via fake DirEntry.
+
+### 2026-11-04 — Review pass 3 (adversarial security follow-up)
+- verdicts: 3 findings — medium 1, low 1, false 1
+- findings:
+  - `[medium]` `[patch]` GET (and root enumeration for both routes) ran on the event loop — moved to `asyncio.to_thread`.
+  - `[low]` `[patch]` trashinfo open followed a swapped-in symlink — O_NOFOLLOW open; test.
+  - `[false]` `[reject]` i18n.ts reformatting — already reverted before this pass (reviewer read a stale diff; branch diff is additions only).
+
 ## Verification
 
 Python: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin/python -r requirements-dev.txt`. Node ONLY via `sh /tmp/majoor-gate/node.sh <worktree> <cmd...>`.
@@ -164,3 +193,12 @@ Python: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin/python -r re
 - `.venv/bin/python -m ruff check <changed>`; `.venv/bin/python -m mypy --config-file mypy.ini`; `.venv/bin/python -m bandit -r mjr_am_backend -ll -ii -x tests` -- clean
 - `sh /tmp/majoor-gate/node.sh $PWD npx vitest run` -- all pass; Prettier drift on edited UI files ≤ upstream/main
 - `sh /tmp/majoor-gate/node.sh $PWD npm run build` -- succeeds
+
+## Auto Run Result
+
+- **Summary:** "Empty trash" in the Status panel (Linux/BSD only) permanently removes the freedesktop trash entries whose original location lies inside a Majoor root — home trash and per-mount `.Trash-<uid>` / sticky `.Trash/<uid>`, owner- and mode-checked, removal by fd with O_NOFOLLOW, files only (directories skipped), foreign/orphan/malformed entries never touched. `GET /mjr/am/trash` → `{supported, count, bytes}` (20/60 s); `POST /mjr/am/trash/empty` (CSRF, write access, `trash_empty` on the delete gate so it is off whenever delete is, 3/60 s, audit counts only). Confirm dialog with count and size; scan and empty run off the event loop.
+- **Branch:** `feat/empty-trash` @ 2348f2a2 (service 8485791c, api 265f42d6, ui 72ac8013, docs 645dbc94, chore(dist) 2348f2a2) off upstream/main 599b47df. Nothing posted upstream.
+- **Files:** `mjr_am_backend/features/assets/trash_service.py` (new), `routes/handlers/db_maintenance.py`, `routes/core/security_policy.py`; `ui/features/status/emptyTrashAction.ts` (new), `StatusDot.ts`, `ui/api/clientOps.ts`, `ui/api/endpoints.ts`, `ui/app/i18n.ts`; tests `tests/features/test_trash_service.py`, `tests/security/test_trash_empty.py`, route tests, `ui/tests/empty_trash_action.vitest.ts`; docs `API_REFERENCE.md`, `DB_MAINTENANCE.md`, `SECURITY_ENV_VARS.md`; `CHANGELOG.md`; `dist/`.
+- **Review:** 3 passes (1 orchestrator, 2 adversarial security); 9 patches (3 high via plan amendments, 4 medium, 2 low), 1 rejected. Converged: final security pass verified all fixes, no high/medium open.
+- **Verification:** full gate in `node:24-bookworm`: pytest 2043 passed; Vitest 869 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; no Prettier drift change; trash_service 100% line+branch.
+- **Open design questions (for the maintainer):** scope by original location, Linux/BSD-only v1, placement — `drafts/2.5-issue.md`.
