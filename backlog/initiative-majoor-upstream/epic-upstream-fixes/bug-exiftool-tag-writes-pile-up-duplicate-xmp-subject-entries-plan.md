@@ -15,6 +15,7 @@ context: []
 baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: []
 deferred: []
+upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/272'
 branch: 'fix/exiftool-tag-dedup'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/fix-exiftool-tag-dedup'
 ---
