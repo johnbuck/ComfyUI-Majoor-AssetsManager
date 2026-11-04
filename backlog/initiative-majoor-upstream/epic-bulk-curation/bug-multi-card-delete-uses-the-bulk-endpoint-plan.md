@@ -3,12 +3,12 @@ title: 'Multi-card delete goes through the bulk assets/delete endpoint'
 type: 'bugfix'
 ticket: '2'
 created: '2026-11-04'
-status: 'in-progress'
+status: 'in-review'
 route: 'full'
 route_source: 'pinned'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'quick'
+review_source: 'pinned'
+lenses_ran: ['quick']
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []
@@ -101,6 +101,11 @@ flow's behaviour beyond the `deleteAssets` event fix. No new settings. Never run
 ## Implementation Notes
 
 ## Plan Change Log
+
+### 2026-11-04 — amendments from review
+- **Trigger 1 (orchestrator review):** whole-chunk `RATE_LIMITED` from the bulk route fell back to up to 500 single deletes (20/min cap). **Amended:** a `RATE_LIMITED` chunk is counted failed, no fallback. **Also:** on an ok response, failures = `ids.length - deleted_ids.length`.
+- **Trigger 2 (quick lens):** bulk validation is all-or-nothing, so one stale or out-of-root id in a 500-id chunk sent the chunk to the per-id fallback, where everything past the single-delete cap failed. **Amended (lifts the "No backend changes" Never for one additive change):** `route_actions_batch_delete.py` attaches the offending ids to the rejection's `meta` (`missing_ids` for NOT_FOUND, `rejected_ids` for path FORBIDDEN/INVALID_INPUT), and the UI drops those ids (counted failed) and retries the rest of the chunk once through the bulk route. The per-id fallback is only used when the rejection names no ids. Known-bad state avoided: a 500-card delete reporting ~480 failures because of one stale card.
+- **KEEP:** chunk size 500, sequential chunks, filepath-only singles, `deleteAssets` emitting only `deleted_ids`, menu/keyboard confirmation behaviour, progress toast only when `done < total`, separate dist commit.
 
 ## Review Triage Log
 
