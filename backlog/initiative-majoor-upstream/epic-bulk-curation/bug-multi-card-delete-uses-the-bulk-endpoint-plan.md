@@ -152,3 +152,7 @@ Node runs ONLY in the container: `sh /tmp/majoor-gate/node.sh <worktree> <cmd...
 - **Review:** 2 passes; 6 patches (2 medium, 4 low incl. Prettier), 2 plan amendments, 1 rejected, 0 deferred. Follow-up review recommended: false (pass 2 is a follow-up pass with no high).
 - **Verification:** full gate in `node:24-bookworm`: pytest 1934 passed; Vitest 873 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; Prettier drift on edited files equal to main, new files clean.
 - **Residual risk:** a 5000+-card delete exceeds the bulk route's 10/min limit; the fetch client's own 429 retry may absorb it, otherwise later chunks are reported failed (visible in the toast). Delete-key path still has no confirmation (pre-existing).
+
+### 2026-11-04 — Integrated with upstream/main 39defc34
+Upstream moved 30 commits after the 599b47df baseline. Merged `upstream/main` into the branch (merge commit, no rebase/force-push), resolved committed `dist/` by taking upstream's and rebuilding in the container (separate `chore(dist): rebuild`), and re-ran the full gate. Two upstream floating-viewer Vitest cases time out only when several gates run in parallel (pass alone and on main). The gate now clears `tests/__pytest_tmp__` first (upstream's new BOM fixtures there tripped the BOM check on re-runs).
+Source merged clean; dist rebuilt. Gate after merge: pytest 1963, Vitest 877.

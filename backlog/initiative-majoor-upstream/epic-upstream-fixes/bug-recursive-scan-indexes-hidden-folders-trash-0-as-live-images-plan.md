@@ -128,3 +128,7 @@ All commands run in the worktree on Python 3.12 (`uv venv -p 3.12 .venv && uv pi
 ### PR opened 2026-11-04
 
 Operator approved; opened upstream as #274. Ticket stays `built` until merged or closed upstream.
+
+### 2026-11-04 — Integrated with upstream/main 39defc34
+Upstream moved 30 commits after the 599b47df baseline. Merged `upstream/main` into the branch (merge commit, no rebase/force-push), resolved committed `dist/` by taking upstream's and rebuilding in the container (separate `chore(dist): rebuild`), and re-ran the full gate. Two upstream floating-viewer Vitest cases time out only when several gates run in parallel (pass alone and on main). The gate now clears `tests/__pytest_tmp__` first (upstream's new BOM fixtures there tripped the BOM check on re-runs).
+Conflict in `watcher.py` (upstream added `sidecar_media_paths` next to `IGNORED_DIRS`): kept upstream's function and our shared-set alias. Pushed to the fork as a fast-forward, updating open PR #274. Gate after merge: pytest 1967 passed, Vitest 862 passed.

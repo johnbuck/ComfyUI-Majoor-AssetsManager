@@ -151,3 +151,7 @@ Python: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin/python -r re
 - **Files:** `mjr_am_backend/routes/assets/route_actions_batch_rating.py` (new), `routes/assets/route_actions.py`, `routes/handlers/assets_impl.py`, `routes/handlers/asset_docs.py`, `routes/core/security_policy.py`; `ui/features/grid/bulkRating.ts` (new), `ui/api/client.ts`, `ui/api/endpoints.ts`, `ui/features/panel/controllers/ratingHotkeysController.ts`, `ui/features/contextmenu/GridContextMenu.ts`, `ui/app/i18n.ts`; tests (pytest +10, vitest `bulk_rating` 14 + hotkeys +5); `docs/API_REFERENCE.md`, `docs/RATINGS_TAGS_COLLECTIONS.md`, `CHANGELOG.md`; `dist/`.
 - **Review:** 2 passes; 6 patches (1 high, 2 medium, 3 low), 0 deferred, 0 rejected. Follow-up done; converged.
 - **Verification:** full gate in `node:24-bookworm`: pytest 1941 passed; Vitest 877 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; no added Prettier drift.
+
+### 2026-11-04 — Integrated with upstream/main 39defc34
+Upstream moved 30 commits after the 599b47df baseline. Merged `upstream/main` into the branch (merge commit, no rebase/force-push), resolved committed `dist/` by taking upstream's and rebuilding in the container (separate `chore(dist): rebuild`), and re-ran the full gate. Two upstream floating-viewer Vitest cases time out only when several gates run in parallel (pass alone and on main). The gate now clears `tests/__pytest_tmp__` first (upstream's new BOM fixtures there tripped the BOM check on re-runs).
+Source merged clean; dist rebuilt. Gate after merge: pytest 1970, Vitest 881.
