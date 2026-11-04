@@ -3,12 +3,12 @@ title: 'Empty trash: permanently remove the files Majoor sent to the freedesktop
 type: 'feature'
 ticket: '5'
 created: '2026-11-04'
-status: 'in-progress'
+status: 'in-review'
 route: 'full'
 route_source: 'pinned'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'thorough'
+review_source: 'pinned'
+lenses_ran: ['security']
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []
@@ -140,6 +140,17 @@ node/npm on the host.
 ## Implementation Notes
 
 ## Plan Change Log
+
+### 2026-11-04 — amendments from orchestrator review
+- **Trigger:** crafted info basenames (`.trashinfo`, `..trashinfo`, `...trashinfo`) made the payload `files/` or the trash dir → rmtree of everything (HIGH). **Amended:** payload stem validated; payload parent must be `files/`. Also: lexical+realpath root matching (symlinked root prefixes), 64 KiB trashinfo read cap.
+
+### 2026-11-04 — amendments from adversarial security review
+- **Trigger 1 (HIGH):** per-uid trash dirs accepted without ownership/mode checks → on a world-writable mount another user can plant `.Trash-<uid>` (or a self-made sticky `.Trash/<uid>`). **Amended:** a trash dir (and its `files/`, `info/`) is used only if owned by `uid` and not group/world-writable (`mode & 0o022 == 0`); `.Trash` parent must be a real dir with the sticky bit (owner unrestricted, per spec) and `.Trash/<uid>` owned by `uid`. Home trash gets the same ownership/mode check.
+- **Trigger 2 (HIGH):** path-based removal after one-shot validation → `files/`/`info/` swapped for symlinks between scan and unlink = arbitrary file deletion. **Amended:** directory payloads are NOT removed (Majoor only ever trashes files; such entries are skipped and reported in `skipped_dirs`) — removes `shutil.rmtree` entirely. Removal opens the trash dir, then `files/` and `info/` with `O_RDONLY|O_DIRECTORY|O_NOFOLLOW` relative to the parent fd, re-checks ownership/mode via `fstat`, `os.lstat(stem, dir_fd=files_fd)` must be a regular file or symlink, then `os.unlink(stem, dir_fd=files_fd)` and `os.unlink(info_name, dir_fd=info_fd)`. No path-based unlink remains.
+- **Trigger 3 (MEDIUM):** NUL in `Path=` raised `ValueError` past the per-entry handling → whole scan fails. **Amended:** reject `Path=` containing NUL; per-entry evaluation catches `(OSError, ValueError)` and skips the entry.
+- **Trigger 4 (MEDIUM):** GET recursively sized directory payloads, unbounded, no rate limit. **Amended:** no recursion (directories skipped); GET rate-limited (20/60 s).
+- Payload-stem sub-guards unreachable via real scandir are kept as defence-in-depth and tested by calling `_entry_from_info` with a fake DirEntry.
+- **KEEP:** selection-by-original-location semantics, root enumeration, platform gate, `trash_empty` on the delete gate, POST guard order, audit (counts only), UI flow and wording, 100% coverage of the service.
 
 ## Review Triage Log
 
