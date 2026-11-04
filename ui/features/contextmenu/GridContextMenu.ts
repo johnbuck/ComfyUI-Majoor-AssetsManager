@@ -53,6 +53,7 @@ import {
     openGridTagsPopover,
 } from "./gridContextMenuState.js";
 import { cancelAllRatingUpdates, scheduleRatingUpdate } from "./ratingUpdater.js";
+import { buildExtensionItems, createMenuContext, type MenuId } from "./menuRegistry.js";
 import { createCanvasLoaderNodes } from "../dnd/canvasLoaderNode.js";
 import { stageToInputDetailed } from "../dnd/staging/stageToInput.js";
 import { resolveAssetWorkflow } from "../viewer/workflowGraphMap/workflowGraphMapData.js";
@@ -889,6 +890,23 @@ function _getSelectionSnapshot(gridContainer: any) {
         isMultiSelected: effectiveSelectionCount > 1,
         hasSelection: effectiveSelectionCount > 0,
     };
+}
+
+function _gridExtensionItems(
+    menu: Extract<MenuId, "grid-asset" | "grid-empty" | "grid-folder">,
+    asset: any,
+    gridContainer: any,
+    selection: any,
+) {
+    const ctx = createMenuContext(
+        menu,
+        asset,
+        Array.from(selection?.selectedIds || []),
+        selection?.selectedAssetsNow || [],
+        String(gridContainer?.dataset?.mjrScope || ""),
+        String(gridContainer?.dataset?.mjrSubfolder || ""),
+    );
+    return buildExtensionItems(menu, ctx, createItem, createSeparator);
 }
 
 function _ensureRightClickSelection({ asset, card, gridContainer }: { asset?: any; card?: any; gridContainer?: any } = {}) {
@@ -1873,7 +1891,15 @@ export function bindGridContextMenu({ gridContainer, getState = () => ({}) }: { 
             openGridContextMenu({
                 x: event.clientX,
                 y: event.clientY,
-                items: _buildEmptyGridItems({ currentPath: subfolderPath, gridContainer }),
+                items: [
+                    ..._buildEmptyGridItems({ currentPath: subfolderPath, gridContainer }),
+                    ..._gridExtensionItems(
+                        "grid-empty",
+                        null,
+                        gridContainer,
+                        _getSelectionSnapshot(gridContainer),
+                    ),
+                ],
             });
             return;
         }
@@ -1885,18 +1911,27 @@ export function bindGridContextMenu({ gridContainer, getState = () => ({}) }: { 
         if (!asset) return;
 
         const selection = _getSelectionSnapshot(gridContainer);
+        const isFolderAsset = _isFolderAsset(asset);
 
-        const items = _isFolderAsset(asset)
-            ? _buildFolderItems({ asset, gridContainer, panelState })
-            : _buildAssetItems({
-                  asset,
-                  card,
-                  gridContainer,
-                  panelState,
-                  pointerX: event.clientX,
-                  pointerY: event.clientY,
-                  selection,
-              });
+        const items = [
+            ...(isFolderAsset
+                ? _buildFolderItems({ asset, gridContainer, panelState })
+                : _buildAssetItems({
+                      asset,
+                      card,
+                      gridContainer,
+                      panelState,
+                      pointerX: event.clientX,
+                      pointerY: event.clientY,
+                      selection,
+                  })),
+            ..._gridExtensionItems(
+                isFolderAsset ? "grid-folder" : "grid-asset",
+                asset,
+                gridContainer,
+                selection,
+            ),
+        ];
 
         openGridContextMenu({
             x: event.clientX,

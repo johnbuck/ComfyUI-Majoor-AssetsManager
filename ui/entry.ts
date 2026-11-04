@@ -68,6 +68,7 @@ import { reportError, mjrDbg } from "./utils/logging.js";
 // @ts-ignore - external ComfyUI module
 import { app } from "../../scripts/app.js";
 import { registerRealtimeListeners } from "./features/runtime/registerRealtimeListeners.js";
+import { exposeContextMenuApi } from "./features/contextmenu/menuRegistry.js";
 import { exposeDebugApis } from "./features/runtime/entryDebugApi.js";
 import { installBenignConsoleNoiseFilter } from "./features/runtime/benignConsoleNoise.js";
 import { registerGenInfoOverridePicker } from "./features/geninfo/genInfoOverridePicker.js";
@@ -461,6 +462,11 @@ const majoorExtension = {
             reportError,
         });
         installBenignConsoleNoiseFilter();
+
+        // 1b. Public extension API: window.MajoorAssetsManager.api + the
+        //     `mjr:api-ready` event, so external extensions can register
+        //     context-menu entries before the first menu opens.
+        exposeContextMenuApi();
 
         // 2. Resolve the ComfyUI app reference (may take a few frames to be ready).
         setComfyApp(app);

@@ -20,6 +20,7 @@ import { confirmDeletion } from "../../utils/deleteGuard.js";
 import { normalizeRenameFilename, validateFilename } from "../../utils/filenames.js";
 import { reportError } from "../../utils/logging.js";
 import { scheduleRatingUpdate, cancelAllRatingUpdates } from "../contextmenu/ratingUpdater.js";
+import { buildExtensionItems, createMenuContext } from "../contextmenu/menuRegistry.js";
 import {
     closeAllViewerContextMenus,
     openViewerContextMenu,
@@ -435,7 +436,16 @@ function createViewerMenuItems({ asset, event, getCurrentViewUrl, onAssetChanged
         ),
     ];
 
-    return items;
+    const extensionCtx = createMenuContext(
+        "viewer",
+        asset,
+        asset?.id != null ? [asset.id] : [],
+        asset ? [asset] : [],
+        "",
+        "",
+    );
+
+    return [...items, ...buildExtensionItems("viewer", extensionCtx, createItem, createSeparator)];
 }
 
 export function bindViewerContextMenu({
