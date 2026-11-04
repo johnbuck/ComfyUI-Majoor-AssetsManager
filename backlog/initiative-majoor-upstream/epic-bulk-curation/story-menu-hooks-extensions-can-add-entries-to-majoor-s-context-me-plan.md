@@ -3,7 +3,7 @@ title: 'Public context-menu registry so extensions can add menu items'
 type: 'feature'
 ticket: '1'
 created: '2026-11-04'
-status: 'in-review'
+status: 'built'
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -119,6 +119,11 @@ filter-bar menu integration in this change. Never run node/npm on the host.
 
 ## Implementation Notes
 
+- Built by GLM-5.3 sub-agent (Paseo) in worktree `feat-context-menu-hooks`; tests first (suite failed to resolve `menuRegistry.js` on main).
+- First pass Prettier-reformatted whole files; reverted to upstream lines with functional edits only (gate rule: no added Prettier drift; main is not Prettier-clean).
+- `_ensureRightClickSelection` is dead code on main, so extension `ctx.selection` matches the snapshot Majoor's own items use (right-clicking an unselected card keeps the prior selection — same as Majoor's "Delete N files").
+- Design deviates from CONTRIBUTING's "Pinia, no global mutable objects" by necessity (a cross-extension surface must be a global); this is question 1 in the design issue draft and is called out in the PR draft.
+
 ## Plan Change Log
 
 ### 2026-11-04 — amendments from quick review
@@ -126,6 +131,17 @@ filter-bar menu integration in this change. Never run node/npm on the host.
 - **KEEP:** registry semantics, ordering, isolation, the window API + `mjr:api-ready`, item adapter via `createItem`, grid/viewer wiring points, no reformatting of pre-existing lines, separate dist commit.
 
 ## Review Triage Log
+
+### 2026-11-04 — Review pass
+- verdicts: 7 findings — high 0, medium 1, low 5, false 0, maybe-false 0, rejected 1
+- findings:
+  - `[medium]` `[bad_plan]` ctx assets were shallow-frozen spreads; nested objects stayed live Majoor state — plan amended (Plan Change Log): flat frozen `AssetSnapshot` projection; re-derived in 21126b5e.
+  - `[low]` `[patch]` leading `separatorBefore` doubled the separator — skipped when nothing collected yet; test added.
+  - `[low]` `[patch]` docs claimed `mjr:api-ready` fires after UI init; it fires early in setup — docs corrected (registrations apply on next menu open).
+  - `[low]` `[patch]` viewer passed asset type/source as `ctx.scope` — viewer now passes empty scope; documented.
+  - `[low]` `[patch]` re-expose short-circuit left the window API bound to a stale registry after reload — always rebind and re-dispatch; test updated.
+  - `[low]` `[patch]` unknown menu ids mixed with valid ones dropped silently — `console.warn` listing ignored ids; test added.
+  - `[low]` `[reject]` window global + module Map conflicts with Pinia-first convention — sanctioned by plan, it is the open design question for the maintainer (issue draft Q1), and is disclosed in the PR draft.
 
 ## Verification
 
@@ -137,3 +153,12 @@ Node runs ONLY in the container: `sh /tmp/majoor-gate/node.sh <worktree> <cmd...
 - `sh /tmp/majoor-gate/node.sh $PWD npx eslint <changed ui files>` / `npx prettier --check <changed ui files>` -- expected: clean
 - `sh /tmp/majoor-gate/node.sh $PWD npx tsc -p tsconfig.json --noEmit` if the repo typechecks UI (check package.json scripts) -- expected: no new errors
 - `sh /tmp/majoor-gate/node.sh $PWD npm run build` -- expected: succeeds
+
+## Auto Run Result
+
+- **Summary:** public context-menu registry. Extensions call `window.MajoorAssetsManager.api.contextMenu.register({id, menus, order, items(ctx)})` (announced by `mjr:api-ready`). Items render after Majoor's own, below one separator, in grid-asset/grid-empty/grid-folder/viewer menus. The context is a frozen, DOM-free `AssetSnapshot` projection. A throwing or invalid extension never breaks the menu.
+- **Branch:** `feat/context-menu-hooks` @ 366dac10 (feat 21126b5e, docs 3173b61d, chore(dist) 366dac10) off upstream/main 599b47df. Not pushed upstream; nothing posted.
+- **Files:** `ui/features/contextmenu/menuRegistry.ts` (new); `ui/features/contextmenu/GridContextMenu.ts`, `ui/features/viewer/ViewerContextMenu.ts`, `ui/entry.ts` (wiring); `ui/tests/menu_registry.vitest.ts` (new, 24 tests); `docs/EXTENSION_API.md` (new), `docs/DOCUMENTATION_INDEX.md`, `CHANGELOG.md`; `dist/`.
+- **Review:** 5 low patches, 1 medium via plan amendment, 0 deferred, 1 rejected. Follow-up review recommended: false (one medium re-derived through the plan, no high).
+- **Verification:** full gate in `node:24-bookworm`: pytest 1931 passed; Vitest 882 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; Prettier drift on edited files equal to main, new files clean; tsc clean (agent).
+- **Open design questions (for the maintainer):** window global vs ComfyUI extension hook; menu id granularity; API versioning. See `drafts/2.1-issue.md`.
