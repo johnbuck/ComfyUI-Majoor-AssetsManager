@@ -3,12 +3,12 @@ title: 'Bulk tag add/remove across a selection (batch route + bulk editor)'
 type: 'feature'
 ticket: '3'
 created: '2026-11-04'
-status: 'in-progress'
+status: 'in-review'
 route: 'full'
 route_source: 'pinned'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'quick'
+review_source: 'pinned'
+lenses_ran: ['quick']
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []

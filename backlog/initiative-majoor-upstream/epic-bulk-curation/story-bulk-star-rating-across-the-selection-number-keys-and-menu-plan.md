@@ -3,13 +3,13 @@ title: 'Bulk star rating across a selection (batch route, hotkeys, menu)'
 type: 'feature'
 ticket: '4'
 created: '2026-11-04'
-status: 'in-progress'
+status: 'built'
 route: 'full'
 route_source: 'pinned'
-review: ''
-review_source: ''
-lenses_ran: []
-review_loop_iteration: 0
+review: 'quick'
+review_source: 'pinned'
+lenses_ran: ['quick']
+review_loop_iteration: 1
 followup_review_recommended: false
 context: []
 baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
@@ -112,9 +112,26 @@ No reformatting of pre-existing lines. Never run node/npm on the host.
 
 ## Implementation Notes
 
+- Built by GLM-5.3 sub-agent (Paseo) in worktree `feat-bulk-rating`; tests first (route 404 / unresolved import on main).
+- Safe-mode gate trap: `_require_operation_enabled` only knows listed operation names; a new name (`assets_rating`) falls to "unknown operation" and is refused under default safe mode. Mocked-gate route tests missed it; fixed by adding the name to the write-ops tuple, with real-gate tests. Sibling branches (2.3 `assets_tags`, 2.5 `trash_empty`) were steered the same way. Note: 2.3 edits the same tuple line — trivial conflict for whichever merges second.
+- `_ensureRightClickSelection` is dead code on main; bulk mode in the menu is gated on the right-clicked card being part of the selection so an unselected right-click keeps main's single-card behaviour.
+
 ## Plan Change Log
 
 ## Review Triage Log
+
+### 2026-11-04 — Review pass 1 (orchestrator + quick lens)
+- verdicts: 6 findings — high 1, medium 2, low 3, false 0, maybe-false 0
+- findings:
+  - `[low]` `[patch]` (orchestrator) events/toast used the requested rating, not the server-clamped `data.rating` — uses server value.
+  - `[low]` `[patch]` (orchestrator) progress total from raw input length — uses normalised id count.
+  - `[low]` `[patch]` (orchestrator) chunk ids in neither `updated_ids` nor `failed` vanished — counted failed.
+  - `[high]` `[patch]` (orchestrator) `assets_rating` unknown to the safe-mode gate → route refused in default config — added to write-ops tuple; real-gate unit + route tests.
+  - `[medium]` `[patch]` (lens) unselected right-click with others selected went bulk and optimistically rendered the clicked card — bulk only when clicked card is selected; optimistic pre-render removed.
+  - `[medium]` `[patch]` (lens) rapid clicks started overlapping bulk runs (last-completed wins) — serialized latest-wins chain; superseded queued runs send nothing.
+
+### 2026-11-04 — Review pass 2 (follow-up lens)
+- verdicts: 0 findings. Chain is leak/deadlock-free on throw; superseded results ignored by both callers; gate parity confirmed.
 
 ## Verification
 
@@ -126,3 +143,11 @@ Python: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin/python -r re
 - `sh /tmp/majoor-gate/node.sh $PWD npx vitest run` -- all pass
 - Prettier drift on edited UI files ≤ upstream/main; new files clean
 - `sh /tmp/majoor-gate/node.sh $PWD npm run build` -- succeeds
+
+## Auto Run Result
+
+- **Summary:** `POST /mjr/am/assets/rating {ids, rating}` (≤500 ids, 10 req/60 s, per-asset update + sync, partial results, one audit entry). Rating hotkeys with ≥2 selected and "Set rating (N selected)" (when the right-clicked card is in the selection) rate the whole selection in sequential 500-id chunks, latest-wins; badges update from confirmed ids. Single-card paths unchanged.
+- **Branch:** `feat/bulk-rating` @ 4c0e17c7 (api 170c843f, ui 615b76f4, docs 5f1a6a90, chore(dist) 4c0e17c7) off upstream/main 599b47df. Nothing posted upstream.
+- **Files:** `mjr_am_backend/routes/assets/route_actions_batch_rating.py` (new), `routes/assets/route_actions.py`, `routes/handlers/assets_impl.py`, `routes/handlers/asset_docs.py`, `routes/core/security_policy.py`; `ui/features/grid/bulkRating.ts` (new), `ui/api/client.ts`, `ui/api/endpoints.ts`, `ui/features/panel/controllers/ratingHotkeysController.ts`, `ui/features/contextmenu/GridContextMenu.ts`, `ui/app/i18n.ts`; tests (pytest +10, vitest `bulk_rating` 14 + hotkeys +5); `docs/API_REFERENCE.md`, `docs/RATINGS_TAGS_COLLECTIONS.md`, `CHANGELOG.md`; `dist/`.
+- **Review:** 2 passes; 6 patches (1 high, 2 medium, 3 low), 0 deferred, 0 rejected. Follow-up done; converged.
+- **Verification:** full gate in `node:24-bookworm`: pytest 1941 passed; Vitest 877 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; no added Prettier drift.
