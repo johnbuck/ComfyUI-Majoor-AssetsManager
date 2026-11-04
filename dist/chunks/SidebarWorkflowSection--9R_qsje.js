@@ -1,10 +1,10 @@
 import { $ as e, $t as t, At as n, Bt as r, Ct as i, Dt as a, Et as o, Ft as s, Gt as c, Ht as l, I as u, It as d, K as f, Kt as p, Mt as m, N as h, Nt as g, O as _, Ot as v, Pt as y, Q as b, Qt as x, R as S, Rt as C, S as ee, St as te, T as ne, Tt as w, Ut as T, Vt as E, X as re, Y as D, Yt as ie, Z as ae, Zt as oe, at as se, cn as ce, ct as le, dt as ue, en as de, et as fe, gt as pe, it as me, jt as he, k as ge, kt as _e, lt as ve, nt as ye, ot as be, p as xe, rt as Se, sn as Ce, tt as we, ut as Te, w as Ee, wt as De } from "./viewerRuntimeHosts-Ctr8wab-.js";
 import { Ct as Oe, K as ke, N as Ae, T as je, c as Me, d as Ne, f as Pe, h as Fe, j as Ie, l as Le, m as O, o as k, p as Re, pt as ze, s as A, tt as Be, u as Ve, x as He, y as Ue } from "./events-tsQFsZrH.js";
-import { F as We, K as Ge, P as Ke, Y as qe, f as Je, m as Ye, p as Xe } from "./Viewer-DHesfEdb.js";
-import { t as Ze } from "./floatingViewerManager-DYNfChQt.js";
+import { L as We, Q as Ge, R as Ke, Y as qe, f as Je, m as Ye, p as Xe } from "./Viewer-tyIQRJhO.js";
+import { t as Ze } from "./floatingViewerManager-UuQ7Pq2_.js";
 import { A as Qe, C as j, D as $e, E as M, G as et, J as tt, K as nt, N as rt, O as N, R as it, S as at, T as P, U as F, V as I, Y as ot, _ as st, a as ct, b as lt, c as ut, d as dt, dt as L, f as ft, ft as R, g as pt, h as mt, i as ht, j as gt, k as z, l as _t, lt as B, m as vt, n as yt, nt as bt, o as xt, p as St, r as Ct, rt as V, s as wt, t as Tt, u as Et, ut as Dt, y as Ot, z as kt } from "./mjr-primevue-BRqtdXzb.js";
 import { t as At } from "./mjr-vue-vendor-mHY_eIVE.js";
-import { t as jt } from "./viewerOpenRequest-Bw0Fm-S5.js";
+import { t as jt } from "./viewerOpenRequest-CCsdrpd-.js";
 import { a as Mt, i as Nt, n as Pt, o as Ft, r as It, t as Lt } from "./geninfoParser-CgHp-y-n.js";
 // ui/app/settings/settingsUtils.ts
 var H = (e, t) => {
@@ -245,12 +245,12 @@ var H = (e, t) => {
 		console.warn("[Majoor] settings save failed", e);
 		try {
 			let e = Date.now();
-			e - (Number(window?._mjrSettingsSaveFailAt || 0) || 0) > 3e4 && (window._mjrSettingsSaveFailAt = e, Ge(O("dialog.settingsSaveFailed", "Majoor: Failed to save settings (browser storage full or blocked).")));
+			e - (Number(window?._mjrSettingsSaveFailAt || 0) || 0) > 3e4 && (window._mjrSettingsSaveFailAt = e, qe(O("dialog.settingsSaveFailed", "Majoor: Failed to save settings (browser storage full or blocked).")));
 		} catch (e) {
 			console.debug?.(e);
 		}
 		try {
-			qe("mjr-settings-save-failed", { error: String(e?.message || e || "") }, { warnPrefix: "[Majoor]" });
+			Ge("mjr-settings-save-failed", { error: String(e?.message || e || "") }, { warnPrefix: "[Majoor]" });
 		} catch (e) {
 			console.debug?.(e);
 		}
@@ -317,7 +317,7 @@ async function Jt() {
 		} catch (e) {
 			console.debug?.(e);
 		}
-		G(n), K(n), qe("mjr-settings-changed", { key: "security" }, { warnPrefix: "[Majoor]" });
+		G(n), K(n), Ge("mjr-settings-changed", { key: "security" }, { warnPrefix: "[Majoor]" });
 	} catch (e) {
 		console.warn("[Majoor] failed to sync backend security settings", e);
 	}
@@ -329,7 +329,7 @@ async function Yt() {
 		let t = e.data?.prefs;
 		if (!t || typeof t != "object") return;
 		let n = qt();
-		n.ai = n.ai || {}, n.ai.vectorSearchEnabled = H(t.enabled, n.ai.vectorSearchEnabled ?? !0), n.ai.vectorCaptionOnIndex = H(t.caption_on_index ?? t.captionOnIndex, n.ai.vectorCaptionOnIndex ?? !1), n.ai.vectorIndexOnScan = H(t.index_on_scan ?? t.indexOnScan, n.ai.vectorIndexOnScan ?? !1), n.ai.vectorUnloadAfterUse = H(t.unload_after_use ?? t.unloadAfterUse, n.ai.vectorUnloadAfterUse ?? !1), n.ai.vectorConcurrency = Math.max(1, Math.min(16, Math.floor(Number(t.concurrency ?? n.ai.vectorConcurrency ?? 1) || 1))), G(n), K(n), qe("mjr-settings-changed", { key: "ai.vectorSearch" }, { warnPrefix: "[Majoor]" });
+		n.ai = n.ai || {}, n.ai.vectorSearchEnabled = H(t.enabled, n.ai.vectorSearchEnabled ?? !0), n.ai.vectorCaptionOnIndex = H(t.caption_on_index ?? t.captionOnIndex, n.ai.vectorCaptionOnIndex ?? !1), n.ai.vectorIndexOnScan = H(t.index_on_scan ?? t.indexOnScan, n.ai.vectorIndexOnScan ?? !1), n.ai.vectorUnloadAfterUse = H(t.unload_after_use ?? t.unloadAfterUse, n.ai.vectorUnloadAfterUse ?? !1), n.ai.vectorConcurrency = Math.max(1, Math.min(16, Math.floor(Number(t.concurrency ?? n.ai.vectorConcurrency ?? 1) || 1))), G(n), K(n), Ge("mjr-settings-changed", { key: "ai.vectorSearch" }, { warnPrefix: "[Majoor]" });
 	} catch (e) {
 		console.warn("[Majoor] failed to sync backend vector search settings", e);
 	}
@@ -341,7 +341,7 @@ async function Xt() {
 		let t = e.data?.prefs;
 		if (!t || typeof t != "object") return;
 		let n = qt();
-		n.executionGrouping = n.executionGrouping || {}, n.executionGrouping.enabled = H(t.enabled, n.executionGrouping.enabled ?? A.EXECUTION_GROUPING_ENABLED), G(n), K(n), qe("mjr-settings-changed", { key: "executionGrouping.enabled" }, { warnPrefix: "[Majoor]" });
+		n.executionGrouping = n.executionGrouping || {}, n.executionGrouping.enabled = H(t.enabled, n.executionGrouping.enabled ?? A.EXECUTION_GROUPING_ENABLED), G(n), K(n), Ge("mjr-settings-changed", { key: "executionGrouping.enabled" }, { warnPrefix: "[Majoor]" });
 	} catch (e) {
 		console.warn("[Majoor] failed to sync backend execution grouping settings", e);
 	}
@@ -2550,12 +2550,12 @@ function vr(e, t, { initRuntime: n = !1 } = {}) {
 			if (!i.size) return;
 			let e = Array.from(i);
 			i.clear();
-			for (let t of e) qe("mjr-settings-changed", { key: t }, { warnPrefix: "[Majoor]" });
+			for (let t of e) Ge("mjr-settings-changed", { key: t }, { warnPrefix: "[Majoor]" });
 		}, s = () => {
 			if (!a.size) return;
 			let e = Array.from(a);
 			a.clear();
-			for (let t of e) qe("mjr-settings-changed", { key: t }, { warnPrefix: "[Majoor]" });
+			for (let t of e) Ge("mjr-settings-changed", { key: t }, { warnPrefix: "[Majoor]" });
 		}, c = ln(o, 120), l = ln(s, 450), u = (e) => {
 			typeof e == "string" && i.add(e), c();
 		}, d = (e) => {
@@ -2620,7 +2620,7 @@ try {
 	let e = qt();
 	e?.watcher && typeof e.watcher.enabled == "boolean" && Te().then((e) => {
 		let t = !!e?.ok && !!e?.data?.enabled, n = qt();
-		n.watcher = n.watcher || {}, typeof t == "boolean" && t !== !!n.watcher.enabled && (n.watcher.enabled = t, G(n), qe("mjr-settings-changed", { key: "watcher.enabled" }, { warnPrefix: "[Majoor]" }));
+		n.watcher = n.watcher || {}, typeof t == "boolean" && t !== !!n.watcher.enabled && (n.watcher.enabled = t, G(n), Ge("mjr-settings-changed", { key: "watcher.enabled" }, { warnPrefix: "[Majoor]" }));
 	}).catch(() => {});
 } catch (e) {
 	console.debug?.(e);
@@ -4199,12 +4199,12 @@ var Ia = {
 				value: String(i(u.color_space, c.color_space, c.colorspace) || "N/A"),
 				tooltip: "Encoded color space"
 			});
-			let h = We(e.generation_time_ms ?? e.metadata?.generation_time_ms ?? 0);
+			let h = Ke(e.generation_time_ms ?? e.metadata?.generation_time_ms ?? 0);
 			h > 0 && f.push({
 				label: "Generation Time",
 				value: `${(Number(h) / 1e3).toFixed(1)}s`,
 				tooltip: "Time taken to generate this asset (workflow execution time)",
-				valueStyle: `color: ${Ke(h)}; font-weight: 600;`
+				valueStyle: `color: ${We(h)}; font-weight: 600;`
 			});
 			let g = e.generation_time || e.file_creation_time || e.mtime || e.created_at;
 			if (g) {
@@ -5119,7 +5119,7 @@ var Do = ["title"], Oo = ["src"], ko = {
 	setup(e) {
 		let n = e, r = V(0), i = V(!1), a = null;
 		function o() {
-			return a ||= import("./floatingViewerManager-DYNfChQt.js").then((e) => e.n), a;
+			return a ||= import("./floatingViewerManager-UuQ7Pq2_.js").then((e) => e.n), a;
 		}
 		function s() {
 			return (Array.isArray(n.inputFile?.previewCandidates) ? n.inputFile.previewCandidates : [])[r.value] || "";
