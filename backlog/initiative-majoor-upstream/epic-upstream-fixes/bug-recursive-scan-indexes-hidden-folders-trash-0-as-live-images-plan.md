@@ -3,12 +3,12 @@ title: 'Recursive scan skips hidden and Majoor-internal folders'
 type: 'bugfix'
 ticket: '1'
 created: '2026-11-03'
-status: 'in-progress'
+status: 'built'
 route: 'full'
 route_source: 'pinned'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'quick'
+review_source: 'pinned'
+lenses_ran: ['quick']
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []
@@ -87,9 +87,21 @@ tests, or commit text (no "YSALUNE", no staging counts).
 
 ## Implementation Notes
 
+- Implemented by GLM-5.3 sub-agent (Paseo) in worktree `fix-scan-skip-hidden-dirs`. Tests written first: trash, internal and case-insensitive tests failed on unpatched main (3 failed, 3 passed).
+- `_next_dir` checks the name before `is_dir()`; a hidden *file* returns None there and still goes through `_candidate`, so file-level behaviour is unchanged.
+- `IGNORED_DIR_NAMES` (frozenset) moved to `fs_walker.py`; `watcher.py` keeps `IGNORED_DIRS` as an alias. `fs_walker` has no watchdog import, so no new dependency for the watcher.
+- Plan's Black command was not achievable: Black is neither in requirements-dev nor in `scripts/run_quality_gate.py`, and it flags pre-existing upstream lines only. Ruff (the gate's formatter/linter) is clean.
+- Host-only pytest failure `test_custom_roots_routes.py::test_browse_folder_headless_and_success_and_cancel` is environmental (fails identically on baseline on this desktop host; passes in the container gate).
+
 ## Plan Change Log
 
 ## Review Triage Log
+
+### 2026-11-04 — Review pass
+- verdicts: 2 findings — high 0, medium 0, low 1, false 0, maybe-false 0, rejected-plan-edit 1
+- findings:
+  - `[low]` `[patch]` Windows `$RECYCLE.BIN` (send2trash's Windows target) is neither dot-prefixed nor in the set, so a scan rooted at a drive root still walks it — added `$recycle.bin` and `system volume information` to `IGNORED_DIR_NAMES`, test with `$RECYCLE.BIN/S-1-5-21/$Rabc.png`, CHANGELOG widened (amended into bc2dd28a).
+  - `[low]` `[reject]` Plan's `black --check` verification can never pass — fix would edit the plan; Black is not part of the repo's gate and only pre-existing lines are flagged. Recorded in Implementation Notes.
 
 ## Verification
 
@@ -100,3 +112,13 @@ All commands run in the worktree on Python 3.12 (`uv venv -p 3.12 .venv && uv pi
 - `.venv/bin/python -m pytest tests -q -x -p no:cacheprovider` -- expected: no new failures vs baseline
 - `.venv/bin/python -m ruff check mjr_am_backend tests && .venv/bin/python -m black --check -l 100 mjr_am_backend/features/index tests/features/test_index_fs_walker.py` -- expected: clean
 - Full gate (`npm run quality`) is run by the orchestrator in the node:24-bookworm container.
+
+## Auto Run Result
+
+- **Summary:** the recursive scan walker skips subdirectories that are hidden (dot-prefixed) or Majoor/OS-internal (`_mjr_index`, `.git`, `__pycache__`, `node_modules`, `$RECYCLE.BIN`, ...), sharing one name list with the watcher. Scan roots under dot-paths still scan.
+- **Branch:** `fix/scan-skip-hidden-dirs` @ `bc2dd28a` (single commit off upstream/main 599b47df), worktree `../fix-scan-skip-hidden-dirs`. Not pushed.
+- **Files:** `mjr_am_backend/features/index/fs_walker.py` (shared set + name check in `_next_dir`); `mjr_am_backend/features/index/watcher.py` (alias the shared set); `tests/features/test_index_fs_walker.py` (7 tests); `CHANGELOG.md` (Unreleased → Fixed).
+- **Review:** 1 patch applied (low), 0 deferred, 1 rejected (plan-edit). Follow-up review recommended: false (no high, fewer than two medium patched).
+- **Verification:** full gate in `node:24-bookworm` (Python 3.11): pytest 1938 passed / 2 skipped (torch), Vitest 858 passed, Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean. Known-red-on-main checks: pip-audit (Pillow 12.x CVEs, pinned <13) and repo-wide Prettier (237 files; no UI files changed here). Issue reproducer prints `['live.png']` on the branch vs `['deleted.png', 'internal.png', 'live.png']` on main.
+- **Residual risk:** users who keep assets in a dot-prefixed subfolder of a root lose them from recursive scans (consistent with the folder browser, which already hides dot-folders). Called out in the PR draft.
+- **Upstream gate:** issue draft `drafts/1.1-issue.md`, PR draft `drafts/1.1-pr.md` — both held for operator approval.
