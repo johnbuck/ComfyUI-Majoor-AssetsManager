@@ -16,7 +16,7 @@ are already open are not modified. The current API version is `1`
 ```ts
 const unregister = api.contextMenu.register({
     id: "my-extension.bulk-rate",
-    menus: ["grid-asset"],          // "grid-asset" | "grid-empty" | "grid-folder" | "viewer"
+    menus: ["grid-asset"],          // "grid-asset" | "grid-empty" | "grid-folder"
     order: 100,                     // optional, default 100; lower renders first
     items: (ctx) => [
         {
@@ -38,14 +38,14 @@ Every `items(ctx)` and `onSelect(ctx)` call receives a frozen snapshot copy:
 
 ```ts
 type MenuContext = Readonly<{
-    menu: "grid-asset" | "grid-empty" | "grid-folder" | "viewer";
+    menu: "grid-asset" | "grid-empty" | "grid-folder";
     asset: AssetSnapshot | null;          // right-clicked asset (or folder), or null
     selection: Readonly<{
         ids: string[];                    // selected asset ids
         assets: AssetSnapshot[];          // snapshots of the selected assets
-        count: number;                    // selection size (viewer: 1, the shown asset)
+        count: number;                    // selection size
     }>;
-    scope: Readonly<{ scope: string; subfolder: string }>;  // grid scope ("output", "input", ...); empty strings in the viewer
+    scope: Readonly<{ scope: string; subfolder: string }>;  // grid scope ("output", "input", ...)
 }>;
 
 type AssetSnapshot = Readonly<{
@@ -85,8 +85,9 @@ type ExtItem = {
 - Extension items render after all of Majoor's own items, below a single
   separator, and only when at least one valid extension item exists.
 - Entries sort by `order` (default `100`), then registration order.
-- Menus filter by id: an entry registered for `"viewer"` never appears in
-  grid menus, and vice versa. Unknown menu ids are ignored with a
+- Menus filter by id: an entry registered for `"grid-folder"` never appears in
+  the asset or empty-grid menus, and vice versa. Unknown menu ids (including
+  `"viewer"` — the classic viewer was removed) are ignored with a
   `console.warn`; the registration still applies to any valid ids listed.
 - If `items()` throws or returns a non-array, that registration is skipped
   with a `console.warn` and the menu still opens. Invalid items (no usable

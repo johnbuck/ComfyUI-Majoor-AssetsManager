@@ -2,7 +2,7 @@
  * menuRegistry.ts
  *
  * Public context-menu registry that lets external extensions add entries to
- * Majoor's grid and viewer context menus. Exposed on
+ * Majoor's grid context menus. Exposed on
  * `window.MajoorAssetsManager.api.contextMenu` (see `exposeContextMenuApi`)
  * and announced with the `mjr:api-ready` window event.
  *
@@ -24,7 +24,7 @@ import { comfyToast } from "../../app/toast.js";
 
 export const MENU_API_VERSION = 1;
 
-export type MenuId = "grid-asset" | "grid-empty" | "grid-folder" | "viewer";
+export type MenuId = "grid-asset" | "grid-empty" | "grid-folder";
 
 export type AssetSnapshot = Readonly<{
     id: string;
@@ -71,7 +71,7 @@ type MajoorMenuApi = {
     };
 };
 
-const KNOWN_MENU_IDS = new Set<string>(["grid-asset", "grid-empty", "grid-folder", "viewer"]);
+const KNOWN_MENU_IDS = new Set<string>(["grid-asset", "grid-empty", "grid-folder"]);
 const DEFAULT_ORDER = 100;
 const SELECT_ERROR_TOAST_MS = 4000;
 
@@ -118,7 +118,7 @@ export function registerContextMenuItems(registration: MenuRegistration): () => 
     if (!menus.length) {
         console.warn(
             `[Majoor menuRegistry] register() ignored for "${id}": 'menus' must contain at least ` +
-                'one of "grid-asset", "grid-empty", "grid-folder", "viewer".',
+                'one of "grid-asset", "grid-empty", "grid-folder".',
         );
         return noop;
     }

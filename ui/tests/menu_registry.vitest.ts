@@ -9,11 +9,6 @@ import {
     gridContextMenuState,
 } from "../features/contextmenu/gridContextMenuState.js";
 import {
-    closeAllViewerContextMenus,
-    viewerContextMenuState,
-} from "../features/contextmenu/viewerContextMenuState.js";
-import { bindViewerContextMenu } from "../features/viewer/ViewerContextMenu.js";
-import {
     MENU_API_VERSION,
     __resetMenuRegistryForTests,
     buildExtensionItems,
@@ -53,7 +48,7 @@ const labelsOf = (items: any[]) =>
     items.map((item) => (item?.type === "separator" ? "|" : String(item?.label || "")));
 
 const unitCtx = () =>
-    createMenuContext("viewer", { id: "v1" }, ["v1"], [{ id: "v1" }], "output", "");
+    createMenuContext("grid-asset", { id: "v1" }, ["v1"], [{ id: "v1" }], "output", "");
 
 function buildGridHarness({ selectedIds = ["a1"] as string[] } = {}) {
     const assets = [
@@ -106,67 +101,83 @@ describe("menu registry unit", () => {
     it("sorts registrations by order (default 100) then registration order", () => {
         registerContextMenuItems({
             id: "a",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             order: 200,
             items: () => [{ label: "A" }],
         });
         registerContextMenuItems({
             id: "b",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             order: 50,
             items: () => [{ label: "B" }],
         });
-        registerContextMenuItems({ id: "x", menus: ["viewer"], items: () => [{ label: "X" }] });
-        registerContextMenuItems({ id: "y", menus: ["viewer"], items: () => [{ label: "Y" }] });
+        registerContextMenuItems({ id: "x", menus: ["grid-asset"], items: () => [{ label: "X" }] });
+        registerContextMenuItems({ id: "y", menus: ["grid-asset"], items: () => [{ label: "Y" }] });
 
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "B", "X", "Y", "A"]);
     });
 
     it("re-registering an id replaces the earlier registration", () => {
         registerContextMenuItems({
             id: "a",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "first" }],
         });
         registerContextMenuItems({
             id: "a",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "second" }, { label: "second-b" }],
         });
 
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "second", "second-b"]);
     });
 
     it("the returned function unregisters the items", () => {
         const unregister = registerContextMenuItems({
             id: "a",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "gone" }],
         });
         expect(
-            buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator).length,
+            buildExtensionItems("grid-asset", unitCtx(), fakeCreateItem, fakeCreateSeparator)
+                .length,
         ).toBeGreaterThan(0);
         unregister();
         expect(
-            buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator),
+            buildExtensionItems("grid-asset", unitCtx(), fakeCreateItem, fakeCreateSeparator),
         ).toEqual([]);
     });
 
     it("an unregister function from a replaced registration does not remove the replacement", () => {
         const firstUnregister = registerContextMenuItems({
             id: "a",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "first" }],
         });
         registerContextMenuItems({
             id: "a",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "second" }],
         });
         firstUnregister();
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "second"]);
     });
 
@@ -174,18 +185,23 @@ describe("menu registry unit", () => {
         const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
         registerContextMenuItems({
             id: "bad",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => {
                 throw new Error("nope");
             },
         });
         registerContextMenuItems({
             id: "good",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "good-item" }],
         });
 
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "good-item"]);
         expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('"bad"'), expect.any(Error));
         warnSpy.mockRestore();
@@ -195,12 +211,12 @@ describe("menu registry unit", () => {
         const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
         registerContextMenuItems({
             id: "broken",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => "not an array" as any,
         });
 
         expect(
-            buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator),
+            buildExtensionItems("grid-asset", unitCtx(), fakeCreateItem, fakeCreateSeparator),
         ).toEqual([]);
         expect(warnSpy).toHaveBeenCalledWith(
             expect.stringContaining('"broken"'),
@@ -212,18 +228,23 @@ describe("menu registry unit", () => {
     it("drops items without a usable label, keeps the valid ones", () => {
         registerContextMenuItems({
             id: "mixed",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{} as any, { label: "Y" }, null as any, 42 as any],
         });
 
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "Y"]);
     });
 
     it("renders submenu items through the adapter", () => {
         registerContextMenuItems({
             id: "sub",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [
                 {
                     label: "Parent",
@@ -233,7 +254,12 @@ describe("menu registry unit", () => {
             ],
         });
 
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "Parent"]);
         const parent = items[1];
         expect(parent.iconClass).toBe("pi pi-bolt");
@@ -245,7 +271,7 @@ describe("menu registry unit", () => {
         const captured: any[] = [];
         registerContextMenuItems({
             id: "boom",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [
                 {
                     label: "Sync",
@@ -263,7 +289,12 @@ describe("menu registry unit", () => {
             ],
         });
 
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         const [syncItem, asyncItem, fineItem] = items.slice(1);
 
         syncItem.action();
@@ -280,7 +311,7 @@ describe("menu registry unit", () => {
         fineItem.action();
         expect(comfyToast).not.toHaveBeenCalled();
         expect(captured).toHaveLength(1);
-        expect(captured[0].menu).toBe("viewer");
+        expect(captured[0].menu).toBe("grid-asset");
     });
 
     it("createMenuContext projects assets onto a frozen AssetSnapshot", () => {
@@ -368,18 +399,28 @@ describe("menu registry unit", () => {
     it("a leading separatorBefore item does not double the mandatory separator", () => {
         registerContextMenuItems({
             id: "lead",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "Only", separatorBefore: true }],
         });
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "Only"]);
 
         registerContextMenuItems({
             id: "second",
-            menus: ["viewer"],
+            menus: ["grid-asset"],
             items: () => [{ label: "After", separatorBefore: true }],
         });
-        const more = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        const more = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(more)).toEqual(["|", "Only", "|", "After"]);
     });
 
@@ -391,8 +432,15 @@ describe("menu registry unit", () => {
             items: () => [{ label: "OK" }],
         } as any);
 
-        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("nonsense, worse-menu"));
-        const items = buildExtensionItems("viewer", unitCtx(), fakeCreateItem, fakeCreateSeparator);
+        expect(warnSpy).toHaveBeenCalledWith(
+            expect.stringContaining("nonsense, viewer, worse-menu"),
+        );
+        const items = buildExtensionItems(
+            "grid-asset",
+            unitCtx(),
+            fakeCreateItem,
+            fakeCreateSeparator,
+        );
         expect(labelsOf(items)).toEqual(["|", "OK"]);
         warnSpy.mockRestore();
     });
@@ -415,7 +463,6 @@ describe("menu registry wiring", () => {
 
     afterEach(() => {
         closeAllGridContextMenus();
-        closeAllViewerContextMenus();
         document.body.innerHTML = "";
     });
 
@@ -511,19 +558,53 @@ describe("menu registry wiring", () => {
         unbind();
     });
 
-    it("registration for viewer only leaves grid menus untouched", () => {
+    it("registration for grid-folder only leaves the other grid menus untouched", () => {
         const harness = buildGridHarness();
         const cardBaseline = labelsOf(harness.openMenu());
         const emptyBaseline = labelsOf(harness.openMenu(harness.grid));
 
         registerContextMenuItems({
-            id: "viewer-only",
-            menus: ["viewer"],
-            items: () => [{ label: "VItem" }],
+            id: "folder-only",
+            menus: ["grid-folder"],
+            items: () => [{ label: "FItem" }],
         });
 
         expect(labelsOf(harness.openMenu())).toEqual(cardBaseline);
         expect(labelsOf(harness.openMenu(harness.grid))).toEqual(emptyBaseline);
+
+        const folderAsset = {
+            id: "f1",
+            filename: "folder",
+            filepath: "sub/folder",
+            kind: "folder",
+            type: "output",
+        };
+        const grid = document.createElement("div");
+        grid.dataset.mjrScope = "output";
+        grid.dataset.mjrSubfolder = "sub";
+        (grid as any)._mjrGetSelectedAssets = () => [];
+        (grid as any)._mjrGetAssets = () => [folderAsset];
+        const card = document.createElement("div");
+        card.className = "mjr-asset-card";
+        (card as any)._mjrAsset = folderAsset;
+        grid.appendChild(card);
+        document.body.appendChild(grid);
+        const unbind = bindGridContextMenu({
+            gridContainer: grid,
+            getState: () => ({ scope: "output" }),
+        });
+        card.dispatchEvent(
+            new MouseEvent("contextmenu", {
+                bubbles: true,
+                cancelable: true,
+                clientX: 8,
+                clientY: 8,
+            }),
+        );
+        const items = gridContextMenuState.main.items;
+        expect(items[items.length - 1].label).toBe("FItem");
+        expect(items[items.length - 2].type).toBe("separator");
+        unbind();
         harness.unbind();
     });
 
@@ -557,56 +638,6 @@ describe("menu registry wiring", () => {
         expect(ctx.asset).toMatchObject({ id: "a1" });
         expect(ctx.scope).toEqual({ scope: "output", subfolder: "sub" });
         harness.unbind();
-    });
-
-    it("viewer menu gets viewer-registered items and a single-asset selection context", () => {
-        const overlay = document.createElement("div");
-        const stage = document.createElement("div");
-        overlay.appendChild(stage);
-        document.body.appendChild(overlay);
-        const asset = {
-            id: "v9",
-            filename: "v9.png",
-            filepath: "out/v9.png",
-            kind: "image",
-            type: "output",
-        };
-        const received: any[] = [];
-        registerContextMenuItems({
-            id: "viewer-ext",
-            menus: ["viewer"],
-            items: (ctx) => [
-                { label: `View ${(ctx.asset as any)?.id}`, onSelect: (c) => received.push(c) },
-            ],
-        });
-        const unbind = bindViewerContextMenu({
-            overlayEl: overlay,
-            getCurrentAsset: () => asset,
-            getCurrentViewUrl: null,
-            onAssetChanged: null,
-        }) as () => void;
-
-        stage.dispatchEvent(
-            new MouseEvent("contextmenu", {
-                bubbles: true,
-                cancelable: true,
-                clientX: 8,
-                clientY: 8,
-            }),
-        );
-        const items = viewerContextMenuState.main.items;
-        const extItem = items[items.length - 1];
-        expect(extItem.label).toBe("View v9");
-        expect(items[items.length - 2].type).toBe("separator");
-
-        extItem.action();
-        expect(received[0].menu).toBe("viewer");
-        expect(received[0].selection.count).toBe(1);
-        expect(received[0].selection.ids).toEqual(["v9"]);
-        expect(received[0].asset).not.toBe(asset);
-        expect(received[0].asset).toMatchObject({ id: "v9", type: "output" });
-        expect(received[0].scope).toEqual({ scope: "", subfolder: "" });
-        unbind();
     });
 });
 
@@ -649,11 +680,11 @@ describe("window API exposure", () => {
 
             const unregister = host.api.contextMenu.register({
                 id: "via-api",
-                menus: ["viewer"],
+                menus: ["grid-asset"],
                 items: () => [{ label: "API item" }],
             });
             const items = buildExtensionItems(
-                "viewer",
+                "grid-asset",
                 unitCtx(),
                 fakeCreateItem,
                 fakeCreateSeparator,
