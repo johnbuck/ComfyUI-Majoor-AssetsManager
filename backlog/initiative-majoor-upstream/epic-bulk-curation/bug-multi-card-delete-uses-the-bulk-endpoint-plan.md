@@ -3,13 +3,13 @@ title: 'Multi-card delete goes through the bulk assets/delete endpoint'
 type: 'bugfix'
 ticket: '2'
 created: '2026-11-04'
-status: 'in-review'
+status: 'built'
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
 review_source: 'pinned'
 lenses_ran: ['quick']
-review_loop_iteration: 0
+review_loop_iteration: 1
 followup_review_recommended: false
 context: []
 baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
@@ -100,6 +100,13 @@ flow's behaviour beyond the `deleteAssets` event fix. No new settings. Never run
 
 ## Implementation Notes
 
+- Built by GLM-5.3 sub-agent (Paseo) in worktree `fix-bulk-delete-endpoint`; tests first (suite failed to resolve `bulkDelete.js` on main).
+- Bulk route semantics verified on main: validation is all-or-nothing before any file is touched (NOT_FOUND for a missing id, FORBIDDEN/INVALID_INPUT for a bad path); partial results carry `deleted_ids` + `failed_ids`; the fetch client forwards the full envelope including `meta`, and retries HTTP 429 itself.
+- `deleteAssets()` previously emitted `mjr:assets-deleted` for every requested id even on partial failure; now only `deleted_ids` (no in-repo listeners, so no behaviour change elsewhere).
+- Additive backend change (plan amendment): rejections carry `meta.missing_ids` / `meta.rejected_ids` (all offending ids); `_result_err` forwards meta (single caller).
+- Gate note: Python coverage on main oscillates 67.97–68.02% around the 68% floor; the upstream gate script does not fail on it. Pre-existing.
+- Side finding (not in scope): the Delete key deletes a selection with no confirmation dialog on main (menu path confirms). Candidate follow-up issue.
+
 ## Plan Change Log
 
 ### 2026-11-04 — amendments from review
@@ -108,6 +115,23 @@ flow's behaviour beyond the `deleteAssets` event fix. No new settings. Never run
 - **KEEP:** chunk size 500, sequential chunks, filepath-only singles, `deleteAssets` emitting only `deleted_ids`, menu/keyboard confirmation behaviour, progress toast only when `done < total`, separate dist commit.
 
 ## Review Triage Log
+
+### 2026-11-04 — Review pass 1 (orchestrator + quick lens)
+- verdicts: 5 findings — high 0, medium 2, low 2, false 0, maybe-false 0, rejected 1
+- findings:
+  - `[medium]` `[bad_plan]` (orchestrator) RATE_LIMITED chunk fell back to ≤500 single deletes (20/min) — plan amended; chunk counted failed.
+  - `[low]` `[patch]` (orchestrator) ids missing from both `deleted_ids` and `failed_ids` were not counted — failures = ids − deleted_ids.
+  - `[low]` `[reject]` (lens) RATE_LIMITED special case deviates from plan matrix — it is the orchestrator's amendment, now in the Plan Change Log.
+  - `[low]` `[patch]` (lens) CHANGELOG text did not match fallback behaviour — rewritten.
+  - `[medium]` `[bad_plan]` (lens) one stale/out-of-root id sent a 500-id chunk to per-id fallback (~480 rate-limited failures) — plan amended (lift "no backend changes" for additive meta); UI drops named ids and retries in bulk.
+- Prettier: first build added drift (226 vs 222) in GridContextMenu.ts — reformatted only the changed hunk.
+
+### 2026-11-04 — Review pass 2 (follow-up lens)
+- verdicts: 3 findings — high 0, medium 1, low 2, false 0, maybe-false 0
+- findings:
+  - `[low]` `[patch]` ok response without `deleted_ids` but with `failed_ids` dropped the non-failed ids from both counts — treated as deleted; test added.
+  - `[medium]` `[patch]` backend named only the first bad row and the UI retry ignored the retry's named ids, so ≥2 bad ids per chunk still hit the per-id fallback — backend aggregates all failing rows into `rejected_ids`; UI loops up to 3 bulk attempts dropping named ids; tests (backend 2-row, UI NOT_FOUND→FORBIDDEN→ok).
+  - `[low]` `[patch]` CHANGELOG claimed fallback only when nothing named — rewritten to match the bounded loop.
 
 ## Verification
 
@@ -119,3 +143,12 @@ Node runs ONLY in the container: `sh /tmp/majoor-gate/node.sh <worktree> <cmd...
 - `sh /tmp/majoor-gate/node.sh $PWD npx eslint <changed ui files>` and `... npx prettier --check <changed ui files>` -- expected: clean
 - `sh /tmp/majoor-gate/node.sh $PWD npm run build` -- expected: succeeds; commit `dist/` separately
 - Full gate (`/tmp/majoor-gate/gate.sh`) is run by the orchestrator.
+
+## Auto Run Result
+
+- **Summary:** "Delete N files…" and the Delete key on a selection go through `POST /mjr/am/assets/delete` in sequential 500-id chunks instead of one single-delete request per card. Rejected chunks drop the server-named offending ids and retry in bulk (≤3 attempts), per-id fallback only when nothing is named; rate-limited chunks are reported failed. Filepath-only cards keep single deletes. `deleteAssets()` emits only actually-deleted ids. Bulk-route rejections gain additive `meta.missing_ids` / `meta.rejected_ids`. API doc request body corrected (`ids`).
+- **Branch:** `fix/bulk-delete-endpoint` @ f171c25d (fix 0f23422d, docs ae36ff59, chore(dist) f171c25d) off upstream/main 599b47df. Nothing posted upstream.
+- **Files:** `ui/features/grid/bulkDelete.ts` (new); `ui/features/contextmenu/GridContextMenu.ts`, `ui/features/grid/GridKeyboard.ts` (use helper); `ui/api/clientOps.ts` (event fix); `ui/app/i18n.ts` (progress key); `mjr_am_backend/routes/assets/route_actions_batch_delete.py` (additive meta, aggregate rejected ids); tests `ui/tests/bulk_delete.vitest.ts` (15), `tests/features/test_assets_impl_routes.py` (+3); `docs/API_REFERENCE.md`; `CHANGELOG.md`; `dist/`.
+- **Review:** 2 passes; 6 patches (2 medium, 4 low incl. Prettier), 2 plan amendments, 1 rejected, 0 deferred. Follow-up review recommended: false (pass 2 is a follow-up pass with no high).
+- **Verification:** full gate in `node:24-bookworm`: pytest 1934 passed; Vitest 873 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; Prettier drift on edited files equal to main, new files clean.
+- **Residual risk:** a 5000+-card delete exceeds the bulk route's 10/min limit; the fetch client's own 429 retry may absorb it, otherwise later chunks are reported failed (visible in the toast). Delete-key path still has no confirmation (pre-existing).
