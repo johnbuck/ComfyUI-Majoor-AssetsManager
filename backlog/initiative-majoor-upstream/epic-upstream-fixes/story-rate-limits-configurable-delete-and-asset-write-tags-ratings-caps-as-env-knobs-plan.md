@@ -16,6 +16,7 @@ baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: []
 deferred: []
 upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/273'
+upstream_pr: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/pull/276'
 branch: 'feat/configurable-write-rate-limits'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/feat-configurable-write-rate-limits'
 ---
@@ -120,3 +121,7 @@ Worktree Python env: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin
 - **Verification:** full gate in `node:24-bookworm`: pytest 1940 passed / 2 skipped (torch); Vitest 858 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; known-red-on-main pip-audit (Pillow) and repo-wide Prettier (no UI files changed).
 - **Residual risk:** none beyond restart-to-apply. The epic-2 bulk delete (2.2) is the real fix for multi-card delete; this knob is the stopgap and the tuning lever for bulk rate/tag.
 - **Upstream gate:** issue draft `drafts/1.3-issue.md`, PR draft pending operator approval of the issue.
+
+### PR opened 2026-11-04
+
+Operator approved; opened upstream as #276. Ticket stays `built` until merged or closed upstream.

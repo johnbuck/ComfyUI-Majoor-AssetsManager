@@ -16,6 +16,7 @@ baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: []
 deferred: []
 upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/272'
+upstream_pr: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/pull/275'
 branch: 'fix/exiftool-tag-dedup'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/fix-exiftool-tag-dedup'
 ---
@@ -125,3 +126,7 @@ Host may lack exiftool; the orchestrator runs the round trip in the gate contain
 - **Verification:** full gate in `node:24-bookworm` (exiftool installed): pytest 1936 passed / 2 skipped (torch) — round-trip tests executed and passed; Vitest 858 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; known-red-on-main pip-audit (Pillow) and repo-wide Prettier (no UI files changed). Issue reproducer: 16 Subject entries on main.
 - **Residual risk:** upstream CI has no ExifTool, so the round trip only runs where ExifTool is installed; the unit tests guard argument construction in CI. Dropping `-tagsFromFile @` relies on ExifTool preserving untouched tags (verified for PNG tEXt; other containers such as MP4/WebP not exercised).
 - **Upstream gate:** issue draft `drafts/1.2-issue.md`, PR draft pending operator approval of the issue.
+
+### PR opened 2026-11-04
+
+Operator approved; opened upstream as #275. Ticket stays `built` until merged or closed upstream.

@@ -16,6 +16,7 @@ baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: []
 deferred: []
 upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/271'
+upstream_pr: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/pull/274'
 branch: 'fix/scan-skip-hidden-dirs'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/fix-scan-skip-hidden-dirs'
 ---
@@ -123,3 +124,7 @@ All commands run in the worktree on Python 3.12 (`uv venv -p 3.12 .venv && uv pi
 - **Verification:** full gate in `node:24-bookworm` (Python 3.11): pytest 1938 passed / 2 skipped (torch), Vitest 858 passed, Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean. Known-red-on-main checks: pip-audit (Pillow 12.x CVEs, pinned <13) and repo-wide Prettier (237 files; no UI files changed here). Issue reproducer prints `['live.png']` on the branch vs `['deleted.png', 'internal.png', 'live.png']` on main.
 - **Residual risk:** users who keep assets in a dot-prefixed subfolder of a root lose them from recursive scans (consistent with the folder browser, which already hides dot-folders). Called out in the PR draft.
 - **Upstream gate:** issue draft `drafts/1.1-issue.md`, PR draft `drafts/1.1-pr.md` — both held for operator approval.
+
+### PR opened 2026-11-04
+
+Operator approved; opened upstream as #274. Ticket stays `built` until merged or closed upstream.
