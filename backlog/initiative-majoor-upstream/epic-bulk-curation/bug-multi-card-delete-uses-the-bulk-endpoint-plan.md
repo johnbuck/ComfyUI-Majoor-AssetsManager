@@ -68,7 +68,8 @@ flow's behaviour beyond the `deleteAssets` event fix. No new settings. Never run
   `deleteAssetsInChunks(assets, {chunkSize = 500, onProgress})` → `{deletedIds: string[],
   failedCount: number, deletedByFilepath: number}`. Sequential chunks; fallback per matrix.
   Response shape: success `{ok, data:{deleted, deleted_ids}}`; partial `{ok:true, data:{deleted,
-  deleted_ids, failed_ids}, meta:{partial:true}}`; rejection `{ok:false, code, error}`.
+  deleted_ids, failed_ids}, meta:{partial:true,...}}` — detect partial by a non-empty `data.failed_ids`
+  (do not depend on `meta`); rejection `{ok:false, code, error}`.
 - `ui/features/contextmenu/GridContextMenu.ts:1716–1787` -- replace the per-card loop with the helper;
   keep `removeAssetsFromGrid`, `triggerBrowserGridReload`, toasts.
 - `ui/features/grid/GridKeyboard.ts:801–878` -- replace the per-card loop with the helper; keep
