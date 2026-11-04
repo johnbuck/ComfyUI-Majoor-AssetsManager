@@ -3,12 +3,12 @@ title: 'Public context-menu registry so extensions can add menu items'
 type: 'feature'
 ticket: '1'
 created: '2026-11-04'
-status: 'in-progress'
+status: 'in-review'
 route: 'full'
 route_source: 'pinned'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'quick'
+review_source: 'pinned'
+lenses_ran: ['quick']
 review_loop_iteration: 0
 followup_review_recommended: false
 context: []
@@ -120,6 +120,10 @@ filter-bar menu integration in this change. Never run node/npm on the host.
 ## Implementation Notes
 
 ## Plan Change Log
+
+### 2026-11-04 — amendments from quick review
+- **Trigger:** `ctx.asset` / `ctx.selection.assets` were shallow-frozen spreads of live Majoor asset objects, so nested objects (`file_info`, `workflow`, metadata) were live, mutable state, which breaks the "frozen, no live state" contract. Deep copies per menu open are too costly for large selections. **Amended:** context assets are a documented, flat, fully frozen projection, `AssetSnapshot = Readonly<{ id: string, filename: string, subfolder: string, filepath: string, type: string, kind: string, rating: number, tags: readonly string[] }>` (missing fields → "" / 0 / []). `MenuContext.asset: AssetSnapshot | null`, `selection.assets: AssetSnapshot[]`. Viewer `ctx.scope` is `{scope: "", subfolder: ""}` (the viewer has no grid scope). Known-bad state avoided: extensions mutating Majoor's live assets through the context.
+- **KEEP:** registry semantics, ordering, isolation, the window API + `mjr:api-ready`, item adapter via `createItem`, grid/viewer wiring points, no reformatting of pre-existing lines, separate dist commit.
 
 ## Review Triage Log
 
