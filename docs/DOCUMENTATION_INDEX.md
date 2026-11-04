@@ -69,6 +69,7 @@ These are powerful capabilities, but they are not required for the basic Browse 
 | **[SECURITY_ENV_VARS.md](SECURITY_ENV_VARS.md)** | Remote access security, API tokens, safe defaults |
 | **[THREAT_MODEL.md](THREAT_MODEL.md)** | Threats, mitigations, and residual risk |
 | **[API_REFERENCE.md](API_REFERENCE.md)** | Backend endpoint reference |
+| **[EXTENSION_API.md](EXTENSION_API.md)** | Public extension API for adding context-menu entries |
 
 ## Development And Architecture
 
