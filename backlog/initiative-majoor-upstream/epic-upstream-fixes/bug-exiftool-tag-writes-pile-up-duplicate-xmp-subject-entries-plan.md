@@ -3,7 +3,7 @@ title: 'ExifTool rating/tag writes replace list tags instead of appending'
 type: 'bugfix'
 ticket: '2'
 created: '2026-11-03'
-status: 'in-review'
+status: 'built'
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -91,9 +91,19 @@ or commit text.
 
 ## Implementation Notes
 
+- Implemented by GLM-5.3 sub-agent (Paseo) in worktree `fix-exiftool-tag-dedup`. Tests first: 4 unit tests failed on unpatched main.
+- Orchestrator ran the real-ExifTool round trip in the gate container (host has no exiftool): first run failed `'dog' == ['dog']` — ExifTool JSON returns a one-item list tag as a scalar. The fix was correct; the test helper `_list_tag` now normalises to a list, and a fourth save `["dog", "bird"]` checks a multi-item final state. Folded into c593a155.
+- Black is not part of the repo gate; it flags only pre-existing lines.
+
 ## Plan Change Log
 
 ## Review Triage Log
+
+### 2026-11-04 — Review pass
+- verdicts: 2 findings — high 0, medium 0, low 1, false 0, maybe-false 0, rejected-plan-edit 1
+- findings:
+  - `[low]` `[patch]` (orchestrator review, before lens) round-trip test asserted list shape that ExifTool JSON does not return for one-item lists — `_list_tag` normalises scalar→list; added multi-item save; verified with real ExifTool (2 passed).
+  - `[low]` `[reject]` (quick lens) plan's `black --check`/repo-wide ruff not clean — all hunks/errors are on pre-existing lines or untouched files (reproduced on baseline 599b47df); fix would edit the plan.
 
 ## Verification
 
@@ -104,3 +114,13 @@ Host may lack exiftool; the orchestrator runs the round trip in the gate contain
 - `.venv/bin/python -m pytest tests/features/test_exiftool_adapter.py tests/features/test_tags_sync.py tests/features/test_tags_sync_exiftool_roundtrip.py -q` -- expected: pass (round trip may skip on host)
 - `.venv/bin/python -m pytest tests -q -p no:cacheprovider` -- expected: no new failures vs baseline
 - `.venv/bin/python -m ruff check mjr_am_backend tests && .venv/bin/python -m black --check -l 100 <changed files>` -- expected: clean
+
+## Auto Run Result
+
+- **Summary:** ExifTool rating/tag saves now replace `XMP:Subject`/`IPTC:Keywords` instead of appending: list values written as one plain `-TAG=item` per item (bare `-TAG=` only to clear), unqualified `Keywords`/`Subject` dropped from the payload, and the rating/tags write no longer uses `-tagsFromFile @`. PNG `prompt`/`workflow` chunks survive (round-trip test).
+- **Branch:** `fix/exiftool-tag-dedup` @ `c593a155` (single commit off upstream/main 599b47df). Not pushed.
+- **Files:** `mjr_am_backend/adapters/tools/exiftool.py` (list args); `mjr_am_backend/features/tags/sync.py` (payload keys, preserve_workflow=False); `tests/features/test_exiftool_adapter.py`, `tests/features/test_tags_sync.py` (unit); `tests/features/test_tags_sync_exiftool_roundtrip.py` (new, real ExifTool, skips without it); `CHANGELOG.md`.
+- **Review:** 1 patch (low), 0 deferred, 1 rejected. Follow-up review recommended: false.
+- **Verification:** full gate in `node:24-bookworm` (exiftool installed): pytest 1936 passed / 2 skipped (torch) — round-trip tests executed and passed; Vitest 858 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; known-red-on-main pip-audit (Pillow) and repo-wide Prettier (no UI files changed). Issue reproducer: 16 Subject entries on main.
+- **Residual risk:** upstream CI has no ExifTool, so the round trip only runs where ExifTool is installed; the unit tests guard argument construction in CI. Dropping `-tagsFromFile @` relies on ExifTool preserving untouched tags (verified for PNG tEXt; other containers such as MP4/WebP not exercised).
+- **Upstream gate:** issue draft `drafts/1.2-issue.md`, PR draft pending operator approval of the issue.

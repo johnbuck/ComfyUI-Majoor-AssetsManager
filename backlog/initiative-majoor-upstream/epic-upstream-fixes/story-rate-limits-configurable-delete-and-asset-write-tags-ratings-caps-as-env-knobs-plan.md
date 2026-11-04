@@ -3,7 +3,7 @@ title: 'Env knobs for the single-delete and asset-write (rating/tags) rate limit
 type: 'feature'
 ticket: '3'
 created: '2026-11-03'
-status: 'in-review'
+status: 'built'
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -89,9 +89,17 @@ commit text.
 
 ## Implementation Notes
 
+- Implemented by GLM-5.3 sub-agent (Paseo) in worktree `feat-configurable-write-rate-limits`. Tests first: 7 failed on unmodified code (missing constants).
+- Knobs are read at import (startup); runtime env changes need a restart, consistent with every other `_env_int` knob in config.py.
+- Verified doc claims: `/mjr/am/asset/{delete,rating,tags}` are the routes, and `_prepare_asset_op_request` serves only `asset_rating` and `asset_tags`.
+
 ## Plan Change Log
 
 ## Review Triage Log
+
+### 2026-11-04 — Review pass
+- verdicts: 0 findings — high 0, medium 0, low 0, false 0, maybe-false 0
+- findings: none (quick lens: "No findings"; orchestrator review of diff found none).
 
 ## Verification
 
@@ -101,3 +109,13 @@ Worktree Python env: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin
 - `.venv/bin/python -m pytest <new/changed test files> -q` -- expected: pass
 - `.venv/bin/python -m pytest tests -q -p no:cacheprovider` -- expected: no new failures vs baseline
 - `.venv/bin/python -m ruff check mjr_am_backend tests && .venv/bin/python -m black --check -l 100 <changed files>` -- expected: clean
+
+## Auto Run Result
+
+- **Summary:** `MJR_AM_DELETE_RATE_LIMIT` (default 20) and `MJR_AM_ASSET_WRITE_RATE_LIMIT` (default 30), clamped 1–10000 per 60 s, replace the hard-coded caps on single delete and rating/tag writes. Defaults unchanged.
+- **Branch:** `feat/configurable-write-rate-limits` @ `b076b6ec` (2 commits: feat + docs, off upstream/main 599b47df). Not pushed.
+- **Files:** `mjr_am_backend/config.py`; `mjr_am_backend/routes/assets/route_actions_delete.py`; `mjr_am_backend/routes/handlers/assets_impl.py`; `tests/config/test_rate_limit_knobs.py` (new); `tests/features/test_assets_impl_routes.py`; `docs/SECURITY_ENV_VARS.md`; `docs/SETTINGS_CONFIGURATION.md`; `CHANGELOG.md`.
+- **Review:** 0 patches, 0 deferred, 0 rejected. Follow-up review recommended: false.
+- **Verification:** full gate in `node:24-bookworm`: pytest 1940 passed / 2 skipped (torch); Vitest 858 passed; Ruff/Mypy/Bandit/Xenon/ESLint/npm audit clean; known-red-on-main pip-audit (Pillow) and repo-wide Prettier (no UI files changed).
+- **Residual risk:** none beyond restart-to-apply. The epic-2 bulk delete (2.2) is the real fix for multi-card delete; this knob is the stopgap and the tuning lever for bulk rate/tag.
+- **Upstream gate:** issue draft `drafts/1.3-issue.md`, PR draft pending operator approval of the issue.
