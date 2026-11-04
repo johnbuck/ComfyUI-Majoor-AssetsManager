@@ -3,7 +3,7 @@ title: 'Env knobs for the single-delete and asset-write (rating/tags) rate limit
 type: 'feature'
 ticket: '3'
 created: '2026-11-03'
-status: 'ready-for-dev'
+status: 'in-progress'
 route: 'full'
 route_source: 'pinned'
 review: ''
