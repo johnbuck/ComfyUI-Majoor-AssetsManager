@@ -3,7 +3,7 @@ title: 'Multi-card delete goes through the bulk assets/delete endpoint'
 type: 'bugfix'
 ticket: '2'
 created: '2026-11-04'
-status: 'built'
+status: done
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -158,3 +158,6 @@ Node runs ONLY in the container: `sh /tmp/majoor-gate/node.sh <worktree> <cmd...
 ### 2026-11-04 — Integrated with upstream/main 39defc34
 Upstream moved 30 commits after the 599b47df baseline. Merged `upstream/main` into the branch (merge commit, no rebase/force-push), resolved committed `dist/` by taking upstream's and rebuilding in the container (separate `chore(dist): rebuild`), and re-ran the full gate. Two upstream floating-viewer Vitest cases time out only when several gates run in parallel (pass alone and on main). The gate now clears `tests/__pytest_tmp__` first (upstream's new BOM fixtures there tripped the BOM check on re-runs).
 Source merged clean; dist rebuilt. Gate after merge: pytest 1963, Vitest 877.
+
+### 2026-11-05 — Merged upstream
+PR #280 merged by the maintainer on 2026-11-05 (no review comments); linked issue closed. Ticket marked `done`. Homelab follow-up: drop the matching vendored patch when re-vendoring a Majoor release that contains this change.

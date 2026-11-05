@@ -3,7 +3,7 @@ title: 'ExifTool rating/tag writes replace list tags instead of appending'
 type: 'bugfix'
 ticket: '2'
 created: '2026-11-03'
-status: 'built'
+status: done
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -130,3 +130,6 @@ Host may lack exiftool; the orchestrator runs the round trip in the gate contain
 ### PR opened 2026-11-04
 
 Operator approved; opened upstream as #275. Ticket stays `built` until merged or closed upstream.
+
+### 2026-11-05 — Merged upstream
+PR #275 merged by the maintainer on 2026-11-05 (no review comments); linked issue closed. Ticket marked `done`. Homelab follow-up: drop the matching vendored patch when re-vendoring a Majoor release that contains this change.
