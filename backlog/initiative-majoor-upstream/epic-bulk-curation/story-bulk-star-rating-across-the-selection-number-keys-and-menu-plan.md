@@ -15,6 +15,7 @@ context: []
 baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: []
 deferred: []
+upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/278'
 branch: 'feat/bulk-rating'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/feat-bulk-rating'
 ---

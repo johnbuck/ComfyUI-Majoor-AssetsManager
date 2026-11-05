@@ -15,6 +15,7 @@ context: []
 baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: ['oversized']
 deferred: []
+upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/279'
 branch: 'feat/empty-trash'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/feat-empty-trash'
 design_open_questions: 'drafts/2.5-issue.md: scope (only entries whose original path is inside a Majoor root), Linux/BSD-only v1, placement. Built to the proposal; maintainer may redirect.'
