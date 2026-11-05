@@ -3,7 +3,7 @@ title: 'Public context-menu registry so extensions can add menu items'
 type: 'feature'
 ticket: '1'
 created: '2026-11-04'
-status: 'built'
+status: dropped
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -169,3 +169,6 @@ Upstream removed the classic viewer and its context menu (ee5bc6ea); the Studio 
 
 ### 2026-11-05 — Re-integrated with upstream/main a9968ed9
 Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and rebuilt it (separate `chore(dist): rebuild`). Gate green: pytest 1993 passed, Vitest 901 passed. Pushed to the fork.
+
+### 2026-11-05 — Dropped
+Closed at the operator's request: no longer relevant. Nothing was posted upstream (no issue, no PR). Branch `feat/context-menu-hooks` remains on the fork, unmerged, for reference.
