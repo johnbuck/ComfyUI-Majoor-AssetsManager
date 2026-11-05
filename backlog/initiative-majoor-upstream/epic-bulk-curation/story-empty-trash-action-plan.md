@@ -16,6 +16,7 @@ baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: ['oversized']
 deferred: []
 upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/279'
+upstream_pr: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/pull/286'
 branch: 'feat/empty-trash'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/feat-empty-trash'
 design_open_questions: 'drafts/2.5-issue.md: scope (only entries whose original path is inside a Majoor root), Linux/BSD-only v1, placement. Built to the proposal; maintainer may redirect.'
@@ -211,3 +212,6 @@ Follow-up commits 9fa4f681 (revert unrelated StatusDot formatting: file is upstr
 
 ### 2026-11-05 — Re-integrated with upstream/main a9968ed9
 Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and rebuilt it (separate `chore(dist): rebuild`). Gate green: pytest 2105 passed, Vitest 889 passed. Pushed to the fork.
+
+### 2026-11-05 — PR opened
+Operator approved; opened upstream as #286. Ticket stays `built` until merged or closed upstream.

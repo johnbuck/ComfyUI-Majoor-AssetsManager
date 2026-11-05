@@ -16,6 +16,7 @@ baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: []
 deferred: []
 upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/278'
+upstream_pr: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/pull/285'
 branch: 'feat/bulk-rating'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/feat-bulk-rating'
 ---
@@ -159,3 +160,6 @@ Source merged clean; dist rebuilt. Gate after merge: pytest 1970, Vitest 881.
 
 ### 2026-11-05 — Re-integrated with upstream/main a9968ed9
 Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and rebuilt it (separate `chore(dist): rebuild`). Gate green: pytest 2003 passed, Vitest 897 passed. Pushed to the fork.
+
+### 2026-11-05 — PR opened
+Operator approved; opened upstream as #285. Ticket stays `built` until merged or closed upstream.

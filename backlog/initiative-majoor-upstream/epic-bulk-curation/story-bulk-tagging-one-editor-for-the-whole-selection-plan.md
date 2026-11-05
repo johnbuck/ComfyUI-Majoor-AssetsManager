@@ -16,6 +16,7 @@ baseline_revision: '599b47dfc1657b28d73ddf62076942e02776e55c'
 warnings: ['oversized']
 deferred: []
 upstream_issue: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/issues/278'
+upstream_pr: 'https://github.com/MajoorWaldi/ComfyUI-Majoor-AssetsManager/pull/284'
 branch: 'feat/bulk-tags'
 worktree: '/home/trumble/.paseo/worktrees/1ldb4s2k/feat-bulk-tags'
 ---
@@ -190,3 +191,6 @@ Source merged clean; dist rebuilt. Gate after merge: pytest 1984, Vitest 883.
 ### 2026-11-05 — Re-integrated with upstream/main a9968ed9
 Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and rebuilt it (separate `chore(dist): rebuild`). Gate green: pytest 2017 passed, Vitest 899 passed. Pushed to the fork.
 Only source conflict: `tests/features/test_assets_impl_routes.py` (both sides appended tests at the end) — kept both.
+
+### 2026-11-05 — PR opened
+Operator approved; opened upstream as #284. Ticket stays `built` until merged or closed upstream.
