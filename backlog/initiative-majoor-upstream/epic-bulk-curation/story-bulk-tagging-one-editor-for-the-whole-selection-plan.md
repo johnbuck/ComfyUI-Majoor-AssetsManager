@@ -186,3 +186,7 @@ Python: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin/python -r re
 ### 2026-11-04 — Integrated with upstream/main 39defc34
 Upstream moved 30 commits after the 599b47df baseline. Merged `upstream/main` into the branch (merge commit, no rebase/force-push), resolved committed `dist/` by taking upstream's and rebuilding in the container (separate `chore(dist): rebuild`), and re-ran the full gate. Two upstream floating-viewer Vitest cases time out only when several gates run in parallel (pass alone and on main). The gate now clears `tests/__pytest_tmp__` first (upstream's new BOM fixtures there tripped the BOM check on re-runs).
 Source merged clean; dist rebuilt. Gate after merge: pytest 1984, Vitest 883.
+
+### 2026-11-05 — Re-integrated with upstream/main a9968ed9
+Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and rebuilt it (separate `chore(dist): rebuild`). Gate green: pytest 2017 passed, Vitest 899 passed. Pushed to the fork.
+Only source conflict: `tests/features/test_assets_impl_routes.py` (both sides appended tests at the end) — kept both.

@@ -166,3 +166,6 @@ Node runs ONLY in the container: `sh /tmp/majoor-gate/node.sh <worktree> <cmd...
 ### 2026-11-04 — Integrated with upstream/main 39defc34
 Upstream moved 30 commits after the 599b47df baseline. Merged `upstream/main` into the branch (merge commit, no rebase/force-push), resolved committed `dist/` by taking upstream's and rebuilding in the container (separate `chore(dist): rebuild`), and re-ran the full gate. Two upstream floating-viewer Vitest cases time out only when several gates run in parallel (pass alone and on main). The gate now clears `tests/__pytest_tmp__` first (upstream's new BOM fixtures there tripped the BOM check on re-runs).
 Upstream removed the classic viewer and its context menu (ee5bc6ea); the Studio viewer has none. Dropped the `viewer` menu id (refactor commit 1cf957f9); an extension passing it now gets the unknown-menu warning. Three menus remain: grid-asset, grid-empty, grid-folder. Gate after merge: pytest 1960, Vitest 885.
+
+### 2026-11-05 — Re-integrated with upstream/main a9968ed9
+Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and rebuilt it (separate `chore(dist): rebuild`). Gate green: pytest 1993 passed, Vitest 901 passed. Pushed to the fork.

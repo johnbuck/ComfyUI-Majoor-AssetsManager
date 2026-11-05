@@ -208,3 +208,6 @@ Python: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin/python -r re
 Upstream moved 30 commits after the 599b47df baseline. Merged `upstream/main` into the branch (merge commit, no rebase/force-push), resolved committed `dist/` by taking upstream's and rebuilding in the container (separate `chore(dist): rebuild`), and re-ran the full gate. Two upstream floating-viewer Vitest cases time out only when several gates run in parallel (pass alone and on main). The gate now clears `tests/__pytest_tmp__` first (upstream's new BOM fixtures there tripped the BOM check on re-runs).
 Source merged clean; dist rebuilt. Post-merge fix 1af8ff14: other suites' `client.js` mocks lacked `getTrashStatus`, so panel init logged errors — trash client now resolved lazily and guarded. That commit reformatted unrelated StatusDot.ts lines; being reverted. Gate after merge: pytest 2072, Vitest 873.
 Follow-up commits 9fa4f681 (revert unrelated StatusDot formatting: file is upstream bytes + 85 added lines) and cbbfb0bc (dist). Final gate: pytest 2072, Vitest 873, no drift change. Pushed to the fork.
+
+### 2026-11-05 — Re-integrated with upstream/main a9968ed9
+Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and rebuilt it (separate `chore(dist): rebuild`). Gate green: pytest 2105 passed, Vitest 889 passed. Pushed to the fork.
