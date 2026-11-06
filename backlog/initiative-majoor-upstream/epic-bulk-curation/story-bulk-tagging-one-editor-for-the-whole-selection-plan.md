@@ -194,3 +194,6 @@ Only source conflict: `tests/features/test_assets_impl_routes.py` (both sides ap
 
 ### 2026-11-05 — PR opened
 Operator approved; opened upstream as #284. Ticket stays `built` until merged or closed upstream.
+
+### 2026-11-06 — Maintainer fixes pulled
+Maintainer pushed type fixes to the branch and asked for a dist rebuild on #284. Pulled and rebuilt: no dist change (HEAD cc4fb9f5). Tightened gate green (tsc app + tests, mypy on changed files, which the earlier gate lacked and is why CI first failed). Replied on the PR.

@@ -215,3 +215,6 @@ Merged upstream/main (after #274–#276/#280 landed), took upstream dist/ and re
 
 ### 2026-11-05 — PR opened
 Operator approved; opened upstream as #286. Ticket stays `built` until merged or closed upstream.
+
+### 2026-11-06 — Maintainer fixes pulled
+Maintainer pushed type fixes to the branch and asked for a dist rebuild on #286. Pulled and rebuilt: no dist change (HEAD 6d959617). Tightened gate green (tsc app + tests, mypy on changed files, which the earlier gate lacked and is why CI first failed). Replied on the PR.

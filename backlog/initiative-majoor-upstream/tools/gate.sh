@@ -18,6 +18,14 @@ rm -rf tests/__pytest_tmp__
 npm ci --no-audit --no-fund >/dev/null 2>&1
 python scripts/run_quality_gate.py --skip-pip-audit --skip-js-lint "$@"
 echo "==> ESLint"; npm run -s lint:js
+# Match upstream CI, which our first gate missed: tsc on app + tests, and mypy on changed Python
+# files including tests (the repo-wide mypy config does not cover tests).
+echo "==> tsc (app)"; npx tsc -p tsconfig.json --noEmit --pretty false
+echo "==> tsc (tests)"; npx tsc -p tsconfig.test.json --noEmit --pretty false
+PYBASE=$(git merge-base HEAD refs/remotes/upstream/main)
+CHANGED_PY=$(git diff --name-only --diff-filter=ACMR "$PYBASE" -- "*.py" || true)
+echo "==> mypy (changed files): ${CHANGED_PY:-none}"
+[ -z "$CHANGED_PY" ] || python -m mypy --config-file mypy.ini $CHANGED_PY
 BASE=$(git merge-base HEAD refs/remotes/upstream/main)
 CHANGED=$(git diff --name-only --diff-filter=ACMR "$BASE" -- "ui/*.ts" "ui/*.js" "ui/*.mjs" "ui/*.vue" | grep -v "^ui/vue/majoor-ui" || true)
 echo "==> Prettier drift (changed files vs merge-base): ${CHANGED:-none}"
