@@ -3,7 +3,7 @@ title: 'Bulk star rating across a selection (batch route, hotkeys, menu)'
 type: 'feature'
 ticket: '4'
 created: '2026-11-04'
-status: 'built'
+status: done
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -166,3 +166,6 @@ Operator approved; opened upstream as #285. Ticket stays `built` until merged or
 
 ### 2026-11-06 — Maintainer fixes pulled
 Maintainer pushed type fixes to the branch and asked for a dist rebuild on #285. Pulled and rebuilt: dist rebuilt and pushed (HEAD 14f452ee). Tightened gate green (tsc app + tests, mypy on changed files, which the earlier gate lacked and is why CI first failed). Replied on the PR.
+
+### 2026-11-06 — Merged upstream
+PR #285 merged by the maintainer on 2026-11-06. Ticket marked `done`.

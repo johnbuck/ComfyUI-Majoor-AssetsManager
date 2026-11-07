@@ -3,7 +3,7 @@ title: 'Bulk tag add/remove across a selection (batch route + bulk editor)'
 type: 'feature'
 ticket: '3'
 created: '2026-11-04'
-status: 'built'
+status: done
 route: 'full'
 route_source: 'pinned'
 review: 'quick'
@@ -197,3 +197,6 @@ Operator approved; opened upstream as #284. Ticket stays `built` until merged or
 
 ### 2026-11-06 — Maintainer fixes pulled
 Maintainer pushed type fixes to the branch and asked for a dist rebuild on #284. Pulled and rebuilt: no dist change (HEAD cc4fb9f5). Tightened gate green (tsc app + tests, mypy on changed files, which the earlier gate lacked and is why CI first failed). Replied on the PR.
+
+### 2026-11-06 — Merged upstream
+PR #284 merged by the maintainer on 2026-11-06. Ticket marked `done`.

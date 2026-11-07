@@ -3,7 +3,7 @@ id: 2
 type: epic
 title: "Bulk curation upstream: delete, tag, rate, trash, and hooks"
 covers: []
-status: in-progress
+status: done
 after: [epic-upstream-fixes]
 ---
 
